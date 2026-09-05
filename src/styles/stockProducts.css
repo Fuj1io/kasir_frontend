@@ -1,0 +1,219 @@
+ body {
+     background-color: #fff;
+     font-family: Arial, sans-serif;
+     font-size: 13px;
+ }
+
+ /* =========================
+           LAYOUT
+        ========================= */
+
+ .app-container {
+     height: 100vh;
+     width: 100%;
+     min-height: 600px;
+     border: 1px solid #ced4da;
+     overflow: hidden;
+ }
+
+
+ /* =========================
+           MAIN
+        ========================= */
+
+
+ /* =========================
+           CONTENT
+        ========================= */
+
+ .content {
+     height: calc(100vh - 56px);
+     overflow-y: auto;
+ }
+
+ .search-box {
+     width: 180px;
+     height: 32px;
+     font-size: 10px;
+ }
+
+ .search-icon {
+     font-size: 12px;
+ }
+
+ /* =========================
+           ADD BUTTON
+        ========================= */
+
+
+
+ /* =========================
+           TABLE
+        ========================= */
+
+ .table-wrapper {
+     border: 1px solid #dee2e6;
+     border-radius: 6px;
+     overflow: hidden;
+ }
+
+ .stock-table {
+     font-size: 9px;
+     vertical-align: middle;
+ }
+
+ .stock-table th {
+     background-color: #f8f9fa;
+     font-weight: 600;
+     color: #343a40;
+     text-align: center;
+     white-space: nowrap;
+ }
+
+ .stock-table td {
+     white-space: nowrap;
+ }
+
+ .stock-table th,
+ .stock-table td {
+     padding: 6px 7px;
+     border-color: #dee2e6;
+ }
+
+ .product-image {
+     width: 36px;
+     height: 36px;
+     border: 1px solid #dee2e6;
+     border-radius: 4px;
+     background-color: #f8f9fa;
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     color: #adb5bd;
+     font-size: 20px;
+ }
+
+ /* =========================
+           STATUS
+        ========================= */
+
+ .status-badge {
+     font-size: 9px;
+     font-weight: 500;
+     padding: 5px 8px;
+ }
+
+ .status-safe {
+     background-color: #e8f5e9;
+     color: #198754;
+ }
+
+ .status-warning {
+     background-color: #fff3cd;
+     color: #fd7e14;
+ }
+
+ .status-danger {
+     background-color: #f8d7da;
+     color: #dc3545;
+ }
+
+ /* =========================
+           ACTION BUTTON
+        ========================= */
+
+ .action-btn {
+     width: 26px;
+     height: 26px;
+     padding: 0;
+     font-size: 11px;
+ }
+
+ /* =========================
+           PAGINATION
+        ========================= */
+
+ .pagination .page-link {
+     font-size: 9px;
+     width: 27px;
+     height: 27px;
+     padding: 5px;
+     text-align: center;
+     color: #343a40;
+ }
+
+ .pagination .active .page-link {
+     background-color: #adb5bd;
+     border-color: #adb5bd;
+     color: white;
+ }
+
+ .page-size {
+     width: 80px;
+     height: 28px;
+     font-size: 9px;
+ }
+
+ /* =========================
+           STATUS INFORMATION
+        ========================= */
+
+ .status-info {
+     border: 1px solid #dee2e6;
+     border-radius: 5px;
+     width: 345px;
+ }
+
+ .status-info-title {
+     font-size: 9px;
+     font-weight: 600;
+ }
+
+ .status-info-item {
+     font-size: 9px;
+ }
+
+ .status-dot {
+     width: 9px;
+     height: 9px;
+     border-radius: 50%;
+     display: inline-block;
+ }
+
+ .dot-green {
+     background-color: #198754;
+ }
+
+ .dot-orange {
+     background-color: #fd7e14;
+ }
+
+ .dot-red {
+     background-color: #dc3545;
+ }
+
+ @media (max-width: 768px) {
+
+     .sidebar {
+         width: 60px;
+         min-width: 60px;
+     }
+
+     .brand-text,
+     .menu-text,
+     .logout-text {
+         display: none;
+     }
+
+     .brand {
+         justify-content: center;
+     }
+
+     .menu-item {
+         justify-content: center;
+     }
+
+     .status-info {
+         width: 100%;
+     }
+ }

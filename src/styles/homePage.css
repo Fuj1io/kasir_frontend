@@ -1,0 +1,311 @@
+/* =========================
+           LAYOUT UTAMA
+        ========================= */
+
+
+/* =========================
+           SIDEBAR
+        ========================= */
+
+.sidebar {
+    width: 145px;
+    min-width: 145px;
+    border-right: 1px solid #dee2e6;
+}
+
+.brand {
+    height: 56px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.brand-icon {
+    font-size: 20px;
+}
+
+.brand-text {
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.menu-item {
+    color: #343a40;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 11px;
+}
+
+.menu-item:hover {
+    transition: all 0.2s ease-in-out;
+    background-color: #d3d5d6;
+    color: #212529;
+}
+
+.menu-item.active {
+    background-color: #3898f8;
+    color: white;
+    font-weight: 600;
+}
+
+.pending {
+    background-color: #d3d5d6;
+    color: #212529;
+}
+
+.menu-icon {
+    width: 18px;
+    font-size: 14px;
+}
+
+.logout {
+    color: #343a40;
+    text-decoration: none;
+    font-size: 11px;
+}
+
+/* =========================
+           CONTENT
+        ========================= */
+
+.main-content {
+    min-width: 0;
+}
+
+.topbar {
+    height: 56px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.topbar-title {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.admin-avatar {
+    width: 24px;
+    height: 24px;
+    border: 1px solid #adb5bd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.admin-name {
+    font-size: 11px;
+}
+
+/* =========================
+           POS AREA
+        ========================= */
+
+.pos-content {
+    height: calc(100vh - 56px);
+    overflow: hidden;
+}
+
+.product-area {
+    min-width: 0;
+}
+
+.search-box {
+    height: 32px;
+    font-size: 11px;
+}
+
+.search-logo {
+    height: auto;
+}
+
+
+
+.category-btn {
+    border-radius: 50rem;
+    font-size: 13px;
+    padding: 6px 16px;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.category-btn.active {
+    background-color: #343a40;
+    color: white;
+    border-color: #343a40;
+}
+
+.category-btn:hover {
+    background-color: #e9ecef;
+    color: #212529;
+}
+
+.category-btn.active:hover {
+    background-color: #212529;
+    color: white;
+}
+
+.dropdown-item {
+    font-size: 13px;
+    padding: 8px 16px;
+    font-weight: 500;
+}
+
+.dropdown-item:active {
+    background-color: #343a40;
+}
+
+/* =========================
+           PRODUCT CARD
+        ========================= */
+
+.product-card {
+    height: 110px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.product-card:hover {
+    border-color: #adb5bd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+}
+
+.product-image {
+    height: 65px;
+    background-color: #f8f9fa;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #adb5bd;
+    font-size: 34px;
+}
+
+.product-name {
+    font-size: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-price {
+    font-size: 9px;
+}
+
+/* =========================
+           CART
+        ========================= */
+
+.cart-area {
+    width: 325px;
+    min-width: 325px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+}
+
+.cart-header {
+    height: 45px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.cart-title {
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.cart-table {
+    font-size: 10px;
+}
+
+.cart-table th {
+    font-weight: 600;
+    color: #495057;
+    background-color: #fff;
+}
+
+.cart-table td,
+.cart-table th {
+    padding: 8px 6px;
+    white-space: nowrap;
+}
+
+.qty-control {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    height: 25px;
+    width: 57px;
+}
+
+.qty-control button {
+    border: 0;
+    background: transparent;
+    width: 18px;
+    padding: 0;
+    font-size: 12px;
+}
+
+.qty-number {
+    width: 18px;
+    text-align: center;
+}
+
+.cart-summary {
+    border-top: 1px solid #dee2e6;
+}
+
+.summary-label {
+    font-size: 11px;
+}
+
+.summary-value {
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.payment-input {
+    height: 31px;
+    text-align: right;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pay-button {
+    height: 34px;
+    background-color: #343e48;
+    border: none;
+    font-size: 12px;
+}
+
+.pay-button:hover {
+    background-color: #212529;
+}
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 60px;
+        min-width: 60px;
+    }
+
+    .brand-text,
+    .menu-text,
+    .logout-text {
+        display: none;
+    }
+
+    .brand {
+        justify-content: center;
+    }
+
+    .menu-item {
+        justify-content: center;
+    }
+
+    .cart-area {
+        width: 300px;
+        min-width: 300px;
+    }
+}
