@@ -1,59 +1,86 @@
 import "../styles/loginPage.css";
-
-import React from 'react'
+import { useState } from "react";
+import { useNavigate } from "react-router";
+import { userApi } from "../services/loader.js";
 
 function LoginPage() {
+    const [ email, setEmail ] = useState('');
+    const [ password, setPassword ] = useState('');
+    const [msg, setMsg] = useState('');
+    const navigate = useNavigate();
+
+    const Auth = async(event) => {
+        event.preventDefault();
+        
+        try {
+            const payload = {
+                email : email,
+                password : password
+            }
+
+            await userApi(payload);
+            navigate("/");
+        } catch (error) {
+            if(error.response){
+                setMsg(error.response.data.message);
+            } else {
+                setMsg(error.message);
+            }
+        }
+    }
+
     return (
         <div className="card login-card">
             {/* Icon  */}
-            <div class="text-center">
-                <i class="bi bi-shop store-icon"></i>
+            <div className="text-center">
+                <i className="bi bi-shop store-icon"></i>
 
-                <h1 class="login-title">
+                <h1 className="login-title">
                     KASIR UMKM
                 </h1>
 
-                <p class="login-subtitle">
+                <p className="login-subtitle">
                     Silakan login untuk melanjutkan
                 </p>
+                <span>{msg}</span>
             </div>
             {/* FORM LOGIN */}
-            <form>
+            <form  onSubmit={Auth}>
 
                 {/* Email / Username  */}
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-person"></i>
+                <div className="input-group">
+                    <span className="input-group-text">
+                        <i className="bi bi-person"></i>
                     </span>
 
-                    <input type="text" class="form-control" placeholder="Email / Username" aria-label="Email atau Username"></input>
+                    <input type="text" className="form-control" placeholder="Email / Username" aria-label="Email atau Username" onChange={(event) => setEmail(event.target.value)} required></input>
                 </div>
 
                 {/* Password  */}
-                <div class="input-group">
-                    <span class="input-group-text">
-                        <i class="bi bi-lock"></i>
+                <div className="input-group">
+                    <span className="input-group-text">
+                        <i className="bi bi-lock"></i>
                     </span>
 
-                    <input type="password" class="form-control" placeholder="Password" aria-label="Password"></input>
+                    <input type="password" className="form-control" placeholder="Password" aria-label="Password" onChange={(event) => setPassword(event.target.value)} required></input>
                 </div>
 
                 {/* Remember & Forgot Password  */}
-                <div class="d-flex justify-content-between align-items-center login-options">
+                <div className="d-flex justify-content-between align-items-center login-options">
 
-                    <div class="form-check mb-0">
-                        <input class="form-check-input" type="checkbox" id="rememberMe"></input>
+                    {/* <div className="form-check mb-0">
+                        <input className="form-check-input" type="checkbox" id="rememberMe"></input>
 
-                        <label class="form-check-label" for="rememberMe">
+                        <label className="form-check-label" htmlFor="rememberMe">
                             Ingat saya
                         </label>
-                    </div>
-                    <a href="#" class="forgot-password">
+                    </div> */}
+                    {/* <a href="#" className="forgot-password">
                         Lupa password?
-                    </a>
+                    </a> */}
                 </div>
-                <button type="submit" class="btn btn-login btn-primary">
-                    <i class="bi bi-box-arrow-in-right me-2"></i>
+                <button type="submit" className="btn btn-login btn-primary">
+                    <i className="bi bi-box-arrow-in-right me-2"></i>
                     Login
                 </button>
 
