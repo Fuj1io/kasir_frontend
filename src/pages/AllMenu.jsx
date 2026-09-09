@@ -1,22 +1,39 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Keranjang from "../pages/Keranjang.jsx";
 import { produkApi } from "../services/loader.js";
 
 function AllMenuMenu() {
-    const [produks, setProduks ] = useState([]);
+    const [produks, setProduks] = useState([]);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [loading, setLoading] = useState(false);
 
-    const fetchProduk = async() => {
-      try {
-        const response = await produkApi();
-        setProduks(response.data);
-      } catch (error) {
-        console.log(error.message)
-      }
-    }
+    const fetchProduk = useCallback(async (pageNum) => {
+        if (loading) return;
+        setLoading(true);
+        try {
+            const response = await produkApi({ page: pageNum, limit: 20 });
+            const newProduk = response.data || [];
+            
+            setProduks((prev) => pageNum === 1 ? newProduk : [...prev, ...newProduk]);
+            setHasMore(pageNum < response.totalPages);
+        } catch (error) {
+            console.log(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }, [loading]);
 
     useEffect(() => {
-        fetchProduk();
-    }, []);
+        fetchProduk(page);
+    }, [page]);
+
+    const handleScroll = (e) => {
+        const { scrollTop, clientHeight, scrollHeight } = e.target;
+        if (scrollHeight - scrollTop <= clientHeight + 50 && hasMore && !loading) {
+            setPage((prev) => prev + 1);
+        }
+    };
 
     return (
         <>
@@ -66,7 +83,7 @@ function AllMenuMenu() {
 
 
                 {/* <!-- PRODUCT LIST --> */}
-                <div className="row row-cols-2 row-cols-md-4 g-2 " style={{ maxHeight: "70vh", overflowY: "auto" }} >
+                <div className="row row-cols-2 row-cols-md-4 g-2 text-center" style={{ maxHeight: "70vh", overflowY: "auto" }} onScroll={handleScroll}>
                     {/* <!-- PRODUCT 1 --> */}
                     {
                         produks?.map((produk, index) => (
@@ -82,13 +99,18 @@ function AllMenuMenu() {
                                 <div className="product-price">
                                 Rp.{produk.harga}
                                 </div>
-                                <button className="btn btn-sm btn-primary">+</button>
+                                <button className="btn btn-sm btn-outline-primary">+</button>
                             </div>
                         </div>
                     </div>
                         ))
                     }
-</div>
+                 <div className="col">
+                    {loading && <div className="text-center py-3">Loading...</div>}
+                    {!hasMore && produks.length > 0 && <div className="text-center py-3 text-muted">Semua data telah ditampilkan</div>}
+                        </div>
+                </div>
+
 
             </section>
             < Keranjang />

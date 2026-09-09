@@ -14,9 +14,14 @@ return user.data;
 }
 
 // API_PRODUK
-export const produkApi = async (params = {}) => {
-    const produk = await axios.get(`${urlProduk}`, { params });
+export const produkApi = async (payload) => {
+    const produk = await axios.get(`${urlProduk}`, {withCredential: false});
 
     return produk.data;
 }
 
+export const produkAPi = async(params = {}) => {
+    const produk = await axios.get(`${urlProduk}`, { params }, { withCredentials: false});
+
+    return produk.data;
+}
