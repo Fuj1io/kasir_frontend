@@ -6,13 +6,13 @@ import Laporan from "../pages/Laporan.jsx";
 import Pengaturan from "../pages/Pengaturan.jsx";
 
 
-import HomePage from "../pages/Index.jsx";
 import LoginPage from "../pages/LoginPage.jsx";
-import AlertStokMenipis from "../components/AlertStokMenipis.jsx";
-import AlertSuccess from "../components/AlertSuccess.jsx";
-import TransaksiSukses from "../components/TransaksiSukses.jsx";
-import FormAddData from "../components/FormAddData.jsx";
-import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
+// import HomePage from "../pages/Index.jsx";
+// import AlertStokMenipis from "../components/AlertStokMenipis.jsx";
+// import AlertSuccess from "../components/AlertSuccess.jsx";
+// // import TransaksiSukses from "../components/TransaksiSukses.jsx";
+// import FormAddData from "../components/FormAddData.jsx";
+// import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
 
 export const router = createBrowserRouter([
     {
@@ -47,29 +47,29 @@ export const router = createBrowserRouter([
 
         ]
     },
-    {
-        path: "/homePage",
-        element: < HomePage />
-    }, {
-        path: "/products",
-        element: <StockProducts />
-    }, {
-        path: "/stok/menipis",
-        element: < AlertStokMenipis />
-    }, {
-        path: "/alert/success",
-        element: <AlertSuccess />
-    }, {
-        path: "/alert/transaksi",
-        element: < TransaksiSukses />
-    }, {
-        path: "/alert/success/add",
-        element: < AlertSuksesAddData />
-    }, {
-        path: "/add",
-        element: < FormAddData />
-    }, {
-        path: "/laporan",
-        element: < Laporan />
-    }
+    // {
+    //     path: "/homePage",
+    //     element: < HomePage />
+    // }, {
+    //     path: "/products",
+    //     element: <StockProducts />
+    // }, {
+    //     path: "/stok/menipis",
+    //     element: < AlertStokMenipis />
+    // }, {
+    //     path: "/alert/success",
+    //     element: <AlertSuccess />
+    // }, {
+    //     path: "/alert/transaksi",
+    //     element: < TransaksiSukses />
+    // }, {
+    //     path: "/alert/success/add",
+    //     element: < AlertSuksesAddData />
+    // }, {
+    //     path: "/add",
+    //     element: < FormAddData />
+    // }, {
+    //     path: "/laporan",
+    //     element: < Laporan />
+    // }
 ]);

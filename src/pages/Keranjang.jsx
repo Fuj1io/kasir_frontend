@@ -1,18 +1,32 @@
-import React from 'react'
+import React, { useState } from 'react';
+import { useCart } from '../context/CartContext.jsx';
 
-function keranjang() {
+function Keranjang() {
+    const { cartItems, updateQty, removeFromCart, clearCart } = useCart();
+    const [bayar, setBayar] = useState('');
+
+    const total = cartItems.reduce((acc, item) => acc + item.harga * item.qty, 0);
+    const nominalBayar = parseInt(bayar.replace(/\D/g, '')) || 0;
+    const kembalian = nominalBayar > total ? nominalBayar - total : 0;
+
     return (
         <section className="cart-area d-flex flex-column">
             {/* <!-- CART HEADER --> */}
             <div className="cart-header d-flex align-items-center justify-content-between px-3">
                 <span className="cart-title">
-                    Keranjang
+                    Keranjang {cartItems.length > 0 && `(${cartItems.length})`}
                 </span>
-                <button className="btn btn-sm p-0 border-0" title="Hapus keranjang">
+                <button 
+                    className="btn btn-sm p-0 border-0" 
+                    title="Hapus keranjang"
+                    onClick={clearCart}
+                    disabled={cartItems.length === 0}
+                >
                     <i className="bi bi-trash"></i>
                 </button>
             </div>
-            <div className="table-responsive">
+
+            <div className="table-responsive" style={{ maxHeight: "40vh", overflowY: "auto" }}>
                 <table className="table table-sm mb-0 cart-table">
                     <thead>
                         <tr>
@@ -24,99 +38,40 @@ function keranjang() {
                         </tr>
                     </thead>
                     <tbody>
-                        {/* <!-- ITEM 1 --> */}
-                        <tr>
-                            <td>
-                                Nasi Goreng
-                            </td>
-                            <td>
-                                Rp 15.000
-                            </td>
-                            <td>
-                                <div className="qty-control">
-                                    <button>
-                                        −
-                                    </button>
-                                    <span className="qty-number">
-                                        1
-                                    </span>
-                                    <button>
-                                        +
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                Rp 15.000
-                            </td>
-                            <td>
-                                <button className="btn btn-sm p-0 border-0">
-                                    ×
-                                </button>
-                            </td>
-                        </tr>
-                        {/* <!-- ITEM 2 --> */}
-                        <tr>
-                            <td>
-                                Es Teh Manis
-                            </td>
-                            <td>
-                                Rp 5.000
-                            </td>
-                            <td>
-                                <div className="qty-control">
-                                    <button>
-                                        −
-                                    </button>
-                                    <span className="qty-number">
-                                        2
-                                    </span>
-                                    <button>
-                                        +
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                Rp 10.000
-                            </td>
-                            <td>
-                                <button className="btn btn-sm p-0 border-0">
-                                    ×
-                                </button>
-                            </td>
-                        </tr>
-                        {/* <!-- ITEM 3 --> */}
-                        <tr>
-                            <td>
-                                Keripik Kentang
-                            </td>
-                            <td>
-                                Rp 7.000
-                            </td>
-                            <td>
-                                <div className="qty-control">
-                                    <button>
-                                        −
-                                    </button>
-                                    <span className="qty-number">
-                                        1
-                                    </span>
-                                    <button>
-                                        +
-                                    </button>
-                                </div>
-                            </td>
-                            <td>
-                                Rp 7.000
-                            </td>
-                            <td>
-                                <button className="btn btn-sm p-0 border-0">
-                                    ×
-                                </button>
-                            </td>
-                        </tr>
+                        {cartItems.length === 0 ? (
+                            <tr>
+                                <td colSpan="5" className="text-center text-muted py-3">
+                                    Keranjang kosong
+                                </td>
+                            </tr>
+                        ) : (
+                            cartItems.map((item) => (
+                                <tr key={item.id_produk}>
+                                    <td>{item.nama_produk}</td>
+                                    <td>Rp {item.harga?.toLocaleString("id-ID")}</td>
+                                    <td>
+                                        <div className="qty-control d-flex align-items-center gap-1">
+                                            <button onClick={() => updateQty(item.id_produk, -1)}>−</button>
+                                            <span className="qty-number">{item.qty}</span>
+                                            <button onClick={() => updateQty(item.id_produk, 1)}>+</button>
+                                        </div>
+                                    </td>
+                                    <td>Rp {(item.harga * item.qty)?.toLocaleString("id-ID")}</td>
+                                    <td>
+                                        <button 
+                                            className="btn btn-sm p-0 border-0 text-danger"
+                                            onClick={() => removeFromCart(item.id_produk)}
+                                        >
+                                            ×
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                     </tbody>
                 </table>
             </div>
+
             {/* <!-- CART SUMMARY --> */}
             <div className="cart-summary mt-auto p-3">
                 {/* <!-- TOTAL --> */}
@@ -124,35 +79,48 @@ function keranjang() {
                     <span className="summary-label fw-semibold">
                         Total
                     </span>
-                    <span className="summary-value">
-                        Rp 32.000
+                    <span className="summary-value fw-bold text-primary">
+                        Rp {total.toLocaleString("id-ID")}
                     </span>
                 </div>
+
                 {/* <!-- UANG DIBAYAR --> */}
                 <div className="d-flex align-items-center justify-content-between mb-2">
                     <span className="summary-label">
                         Uang Dibayar
                     </span>
-                    <input type="text" className="form-control payment-input" value="50.000"
-                        style={{ width: 190 + 'px' }}></input>
+                    <input 
+                        type="text" 
+                        className="form-control payment-input text-end" 
+                        placeholder="0"
+                        value={bayar}
+                        onChange={(e) => setBayar(e.target.value)}
+                        style={{ width: '150px' }}
+                    />
                 </div>
+
                 {/* <!-- KEMBALIAN --> */}
                 <div className="d-flex justify-content-between mb-3">
                     <span className="summary-label fw-semibold">
                         Kembalian
                     </span>
                     <span className="summary-value">
-                        Rp 18.000
+                        Rp {kembalian.toLocaleString("id-ID")}
                     </span>
                 </div>
+
                 {/* <!-- PAY BUTTON --> */}
-                <button type="button" className="btn btn-dark pay-button w-100">
+                <button 
+                    type="button" 
+                    className="btn btn-dark pay-button w-100"
+                    disabled={cartItems.length === 0 || nominalBayar < total}
+                >
                     <i className="bi bi-credit-card me-2"></i>
                     BAYAR
                 </button>
             </div>
         </section>
-    )
+    );
 }
 
-export default keranjang;
+export default Keranjang;

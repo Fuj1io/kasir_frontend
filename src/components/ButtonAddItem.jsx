@@ -1,9 +1,17 @@
-import React from 'react'
+import React from 'react';
+import { useCart } from '../context/CartContext.jsx';
 
-function ButtonAddItem() {
+function ButtonAddItem({ produk }) {
+  const { addToCart } = useCart();
+
   return (
-    <button className="btn btn-sm btn-outline-primary">+</button>
-  )
+    <button 
+      className="btn btn-sm btn-outline-primary"
+      onClick={() => produk && addToCart(produk)}
+    >
+      +
+    </button>
+  );
 }
 
 export default ButtonAddItem;

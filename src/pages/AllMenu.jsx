@@ -104,7 +104,7 @@ function AllMenuMenu() {
                                 <div className="px-2 py-1">
                                     <div className="product-name">{produk.nama_produk}</div>
                                     <div className="product-price">Rp.{produk.harga}</div>
-                                    <ButtonAddItem/>
+                                    <ButtonAddItem produk={produk} />
                                 </div>
                             </div>
                         </div>
