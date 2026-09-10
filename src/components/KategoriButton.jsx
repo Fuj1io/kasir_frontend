@@ -1,26 +1,48 @@
-import React from 'react'
+import React from 'react';
 
-function KategoriButton() {
-  return (
-      <div className="d-flex gap-2 mb-2 flex-wrap">
-                    <button className="btn category-btn">Semua</button>
-                    <button className="btn btn-outline-secondary category-btn">Makanan</button>
-                    <button className="btn btn-outline-secondary category-btn">Minuman</button>
-                    <button className="btn btn-outline-secondary category-btn">Snack</button>
+function KategoriButton({ selectedKategori = "Semua", onSelectKategori }) {
+    const mainCategories = ["Semua", "Makanan", "Minuman", "Bahan Makanan"];
+    const dropdownCategories = ["Snack", "Kebutuhan Harian"];
 
-                    <div className="dropdown">
-                        <button className="btn btn-outline-secondary category-btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            Lainnya..
-                        </button>
-                        <ul className="dropdown-menu shadow-sm border-0 mt-1">
-                            <li><a className="dropdown-item d-flex align-items-center gap-2 py-2" href="#"><i className="bi bi-tag text-muted"></i> Bumbu Dapur</a></li>
-                            <li><a className="dropdown-item d-flex align-items-center gap-2 py-2" href="#"><i className="bi bi-tag text-muted"></i> Kebutuhan Harian</a></li>
-                            <li><hr className="dropdown-divider" /></li>
-                            <li><a className="dropdown-item d-flex align-items-center gap-2 py-2" href="#"><i className="bi bi-list-ul text-muted"></i> Tampilkan Semua</a></li>
-                        </ul>
-                    </div>
-                </div>
-  )
+    const isDropdownActive = dropdownCategories.includes(selectedKategori);
+
+    return (
+        <div className="d-flex gap-2 mb-2 flex-wrap">
+            {mainCategories.map((cat) => (
+                <button
+                    key={cat}
+                    className={`btn category-btn ${selectedKategori === cat ? "btn-primary" : "btn-outline-secondary"}`}
+                    onClick={() => onSelectKategori && onSelectKategori(cat)}
+                >
+                    {cat}
+                </button>
+            ))}
+
+            <div className="dropdown">
+                <button
+                    className={`btn category-btn dropdown-toggle ${isDropdownActive ? "btn-primary" : "btn-outline-secondary"}`}
+                    type="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                >
+                    {isDropdownActive ? selectedKategori : "Lainnya.."}
+                </button>
+                <ul className="dropdown-menu shadow-sm border-0 mt-1">
+                    {dropdownCategories.map((cat) => (
+                        <li key={cat}>
+                            <button
+                                className={`dropdown-item d-flex align-items-center gap-2 py-2 ${selectedKategori === cat ? "active fw-bold" : ""}`}
+                                onClick={() => onSelectKategori && onSelectKategori(cat)}
+                            >
+                                <i className="bi bi-tag text-muted"></i>
+                                {cat}
+                            </button>
+                        </li>
+                    ))}
+                </ul>
+            </div>
+        </div>
+    );
 }
 
 export default KategoriButton;

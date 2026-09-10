@@ -13,15 +13,21 @@ function AllMenuMenu() {
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
     const [keyword, setKeyword] = useState("");
+    const [kategori, setKategori] = useState("Semua");
     const loadingRef = useRef(false);
 
-    // fetching_Data
-    const fetchProduk = useCallback(async (pageNum, query) => {
+    // fetching_Data_start
+    const fetchProduk = useCallback(async (pageNum, query, cat) => {
         if (loadingRef.current) return;
         loadingRef.current = true;
         setLoading(true);
         try {
-            const response = await produkApi({ page: pageNum, limit: 20, s: query });
+            const response = await produkApi({ 
+                page: pageNum, 
+                limit: 20, 
+                s: query,
+                kategori: cat === "Semua" ? "" : cat 
+            });
             const newProduk = response.data || [];
             setProduks((prev) => (pageNum === 1 ? newProduk : [...prev, ...newProduk]));
             setHasMore(pageNum < (response.totalPages || 1));
@@ -32,8 +38,18 @@ function AllMenuMenu() {
             loadingRef.current = false;
         }
     }, []);
+    // fetching_Data_end
 
-    // search_data
+    // category_filter_start
+    const handleSelectKategori = (selectedCat) => {
+        setKategori(selectedCat);
+        setPage(1);
+        setProduks([]);
+        setHasMore(true);
+    };
+    // category_filter_end
+
+    // search_data_start
     const handleSearch = (value) => {
         setKeyword(value);
         setPage(1);
@@ -46,18 +62,20 @@ function AllMenuMenu() {
         setProduks([]);
         setHasMore(true);
     };
+    // search_data_end
 
     useEffect(() => {
-        fetchProduk(page, keyword);
-    }, [page, keyword, fetchProduk]);
+        fetchProduk(page, keyword, kategori);
+    }, [page, keyword, kategori, fetchProduk]);
 
-    // fetch ketikaScroll
+    // fetch ketikaScroll_start
     const handleScroll = (e) => {
         const { scrollTop, clientHeight, scrollHeight } = e.target;
         if (Math.ceil(scrollTop + clientHeight) >= scrollHeight - 50 && hasMore && !loadingRef.current) {
             setPage((prev) => prev + 1);
         }
     };
+    // fetch ketikaScroll_end
 
     return (
         <>
@@ -66,7 +84,7 @@ function AllMenuMenu() {
                 <Search onSearch={handleSearch} />
 
                 {/* <!-- CATEGORY --> */}
-              <KategoriButton/>
+                <KategoriButton selectedKategori={kategori} onSelectKategori={handleSelectKategori} />
 
                 {keyword && (
                     <div className="d-flex align-items-center gap-2 mb-2">
