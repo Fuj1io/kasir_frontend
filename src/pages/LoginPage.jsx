@@ -2,12 +2,14 @@ import "../styles/loginPage.css";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { userApi } from "../services/loader.js";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function LoginPage() {
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const Auth = async(event) => {
         event.preventDefault();
@@ -18,7 +20,12 @@ function LoginPage() {
                 password : password
             }
 
-            await userApi(payload);
+            const response = await userApi(payload);
+            // response.data is accessToken
+            const accessToken = response.data || response.accessToken || response.token;
+            if (accessToken) {
+                login(accessToken);
+            }
             navigate("/");
         } catch (error) {
             if(error.response){

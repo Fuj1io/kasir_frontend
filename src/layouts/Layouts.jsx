@@ -1,3 +1,4 @@
+import UserIsLogedIn from "../components/UserIsLogedIn";
 import "../styles/homePage.css";
 import { NavLink, Outlet } from "react-router";
 
@@ -76,16 +77,7 @@ function Layouts() {
                             <option value="1">Fuji</option>
                         </select>
                     </div> */}
-                    <div className="dropdown">
-                        <span className=" dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            <span>
-                                <i className="bi bi-person-fill"></i>
-                            </span>
-                            nama User</span>
-                        <ul className="dropdown-menu">
-                            <li><a className="dropdown-item" href="#">Admin</a></li>
-                        </ul>
-                    </div>
+                    < UserIsLogedIn />
                 </header>
                 <div className="pos-content d-flex gap-3 p-3">
                     {/* content */}

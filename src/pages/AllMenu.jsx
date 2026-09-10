@@ -42,24 +42,26 @@ function AllMenuMenu() {
 
     // category_filter_start
     const handleSelectKategori = (selectedCat) => {
+        if (selectedCat === kategori && produks.length > 0) return;
+        if (selectedCat === "Semua") {
+            setKeyword("");
+        }
         setKategori(selectedCat);
         setPage(1);
-        setProduks([]);
         setHasMore(true);
     };
     // category_filter_end
 
     // search_data_start
     const handleSearch = (value) => {
+        if (value === keyword && produks.length > 0) return;
         setKeyword(value);
         setPage(1);
-        setProduks([]);
         setHasMore(true);
     };
     const handleResetSearch = () => {
         setKeyword("");
         setPage(1);
-        setProduks([]);
         setHasMore(true);
     };
     // search_data_end

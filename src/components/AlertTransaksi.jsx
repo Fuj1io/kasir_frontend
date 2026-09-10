@@ -5,7 +5,7 @@ function AlertTransaksi({ type = "success", title, message, onClose }) {
 
     return (
         <div 
-            className={`alert card ${isSuccess ? "success-alert border-success" : "danger-alert border-danger"} shadow-lg position-fixed top-50 start-50 translate-middle z-3 bg-light`} 
+            className={`alert card ${isSuccess ? "success-alert border-success" : "danger-alert border-danger"} shadow-lg position-fixed top-50 start-50 translate-middle z-3 text-center bg-light`} 
             style={{ maxWidth: "380px", width: "90%" }}
             role="alert"
         >
@@ -17,7 +17,7 @@ function AlertTransaksi({ type = "success", title, message, onClose }) {
 
                     <div className="flex-grow-1">
                         <div className="d-flex justify-content-between align-items-start mb-1">
-                            <span className={`alert-title fw-bold ${isSuccess ? "text-success" : "text-danger"}`}>
+                            <span className={`alert-title fw-bold text-center flex-grow-1 ${isSuccess ? "text-success" : "text-danger"}`}>
                                 {title || (isSuccess ? "Transaksi Berhasil!" : "Transaksi Gagal!")}
                             </span>
                             <button 
