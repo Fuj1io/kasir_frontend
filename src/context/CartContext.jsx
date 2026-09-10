@@ -9,9 +9,9 @@ export const CartProvider = ({ children }) => {
         setCartItems((prev) => {
             const existingIndex = prev.findIndex((item) => item.id_produk === produk.id_produk);
             if (existingIndex > -1) {
-                const updated = [...prev];
-                updated[existingIndex].qty += 1;
-                return updated;
+                return prev.map((item, index) =>
+                    index === existingIndex ? { ...item, qty: item.qty + 1 } : item
+                );
             }
             return [...prev, { ...produk, qty: 1 }];
         });

@@ -1,16 +1,58 @@
 import React, { useState } from 'react';
 import { useCart } from '../context/CartContext.jsx';
+import ButtonPay from "../components/ButtonPay.jsx";
+import AlertTransaksi from "../components/AlertTransaksi.jsx";
 
 function Keranjang() {
     const { cartItems, updateQty, removeFromCart, clearCart } = useCart();
     const [bayar, setBayar] = useState('');
+    const [alertState, setAlertState] = useState(null); // { type: 'success' | 'danger', title: '', message: '' }
 
     const total = cartItems.reduce((acc, item) => acc + item.harga * item.qty, 0);
     const nominalBayar = parseInt(bayar.replace(/\D/g, '')) || 0;
     const kembalian = nominalBayar > total ? nominalBayar - total : 0;
 
+    const handlePay = () => {
+        if (cartItems.length === 0) {
+            setAlertState({
+                type: 'danger',
+                title: 'Transaksi Gagal!',
+                message: 'Keranjang belanja masih kosong.'
+            });
+            return;
+        }
+
+        if (nominalBayar < total) {
+            setAlertState({
+                type: 'danger',
+                title: 'Pembayaran Gagal!',
+                message: `Uang dibayar kurang dari total belanja (Kurang Rp ${(total - nominalBayar).toLocaleString("id-ID")}).`
+            });
+            return;
+        }
+
+        // Pembayaran berhasil
+        setAlertState({
+            type: 'success',
+            title: 'Pembayaran Berhasil!',
+            message: `Transaksi sukses. Kembalian: Rp ${kembalian.toLocaleString("id-ID")}`
+        });
+
+        clearCart();
+        setBayar('');
+    };
+
     return (
         <section className="cart-area d-flex flex-column">
+            {alertState && (
+                <AlertTransaksi 
+                    type={alertState.type}
+                    title={alertState.title}
+                    message={alertState.message}
+                    onClose={() => setAlertState(null)}
+                />
+            )}
+
             {/* <!-- CART HEADER --> */}
             <div className="cart-header d-flex align-items-center justify-content-between px-3">
                 <span className="cart-title">
@@ -110,14 +152,10 @@ function Keranjang() {
                 </div>
 
                 {/* <!-- PAY BUTTON --> */}
-                <button 
-                    type="button" 
-                    className="btn btn-dark pay-button w-100"
-                    disabled={cartItems.length === 0 || nominalBayar < total}
-                >
-                    <i className="bi bi-credit-card me-2"></i>
-                    BAYAR
-                </button>
+                <ButtonPay 
+                    disabled={cartItems.length === 0}
+                    onClick={handlePay}
+                />
             </div>
         </section>
     );
