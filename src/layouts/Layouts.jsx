@@ -1,4 +1,5 @@
 import UserIsLogedIn from "../components/UserIsLogedIn";
+import ButtonLogout from "../components/ButtonLogout";
 import "../styles/homePage.css";
 import { NavLink, Outlet } from "react-router";
 
@@ -48,14 +49,7 @@ function Layouts() {
                     </NavLink>
                 </nav>
                 {/* <!-- LOGOUT --> */}
-                <div className="mt-auto p-3">
-                    <NavLink to="/logout" className="logout d-flex align-items-center gap-2 ">
-                        <i className="bi bi-box-arrow-right"></i>
-                        <span className="logout-text">
-                            Logout
-                        </span>
-                    </NavLink>
-                </div>
+                <ButtonLogout />
             </aside>
             <main className="main-content flex-grow-1 d-flex flex-column">
                 <header className="topbar d-flex align-items-center justify-content-between px-3">
