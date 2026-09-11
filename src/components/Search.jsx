@@ -1,7 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-function Search({ onSearch }) {
-    const [input, setInput] = useState("");
+function Search({ initialValue = "", onSearch }) {
+    const [input, setInput] = useState(initialValue);
+
+    useEffect(() => {
+        setInput(initialValue);
+    }, [initialValue]);
 
     const handleSearch = () => {
         onSearch(input.trim());

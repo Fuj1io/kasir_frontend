@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from "react";
+import { useSearchParams } from "react-router";
 import { produkApi } from "../services/loader.js";
 
 //component 
@@ -8,12 +9,13 @@ import KategoriButton from "../components/KategoriButton.jsx";
 import ButtonAddItem from "../components/ButtonAddItem.jsx";
 
 function AllMenuMenu() {
+    const [searchParams, setSearchParams] = useSearchParams();
     const [produks, setProduks] = useState([]);
-    const [page, setPage] = useState(1);
+    const [page, setPage] = useState(() => Number(searchParams.get("page")) || 1);
     const [hasMore, setHasMore] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [keyword, setKeyword] = useState("");
-    const [kategori, setKategori] = useState("Semua");
+    const [keyword, setKeyword] = useState(() => searchParams.get("s") || "");
+    const [kategori, setKategori] = useState(() => searchParams.get("kategori") || "Semua");
     const loadingRef = useRef(false);
 
     // fetching_Data_start
@@ -22,12 +24,10 @@ function AllMenuMenu() {
         loadingRef.current = true;
         setLoading(true);
         try {
-            const response = await produkApi({ 
-                page: pageNum, 
-                limit: 20, 
-                s: query,
-                kategori: cat === "Semua" ? "" : cat 
-            });
+            const params = { page: pageNum, limit: 20 };
+            if (query) params.s = query;
+            if (cat !== "Semua") params.kategori = cat;
+            const response = await produkApi(params);
             const newProduk = response.data || [];
             setProduks((prev) => (pageNum === 1 ? newProduk : [...prev, ...newProduk]));
             setHasMore(pageNum < (response.totalPages || 1));
@@ -67,6 +67,18 @@ function AllMenuMenu() {
     // search_data_end
 
     useEffect(() => {
+        const nextParams = new URLSearchParams();
+        nextParams.set("page", String(page));
+        nextParams.set("limit", "20");
+        if (keyword) nextParams.set("s", keyword);
+        if (kategori !== "Semua") nextParams.set("kategori", kategori);
+
+        if (nextParams.toString() !== searchParams.toString()) {
+            setSearchParams(nextParams, { replace: true });
+        }
+    }, [page, keyword, kategori, searchParams, setSearchParams]);
+
+    useEffect(() => {
         fetchProduk(page, keyword, kategori);
     }, [page, keyword, kategori, fetchProduk]);
 
@@ -83,7 +95,7 @@ function AllMenuMenu() {
         <>
             <section className="product-area flex-grow-1">
                 {/* <!-- SEARCH --> */}
-                <Search onSearch={handleSearch} />
+                <Search initialValue={keyword} onSearch={handleSearch} />
 
                 {/* <!-- CATEGORY --> */}
                 <KategoriButton selectedKategori={kategori} onSelectKategori={handleSelectKategori} />

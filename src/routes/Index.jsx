@@ -27,7 +27,7 @@ export const router = createBrowserRouter([
             </ProtectedRoute>
         ),
         children: [
-            { index: true, element: <AllMenu /> },
+            { index: true, element: <Navigate to="/menu" replace /> },
             { path: "/menu", element: <AllMenu /> },
             { path: "/products/stok", element: <StockProducts /> },
             { path: "/laporan", element: <Laporan /> },
