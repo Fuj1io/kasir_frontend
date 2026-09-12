@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useCart } from '../context/CartContext.jsx';
 import ButtonPay from "../components/ButtonPay.jsx";
 import AlertTransaksi from "../components/AlertTransaksi.jsx";
+import { transaksiApi } from "../services/loader.js";
 
 function Keranjang() {
     const { cartItems, updateQty, removeFromCart, clearCart } = useCart();
@@ -12,7 +13,9 @@ function Keranjang() {
     const nominalBayar = parseInt(bayar.replace(/\D/g, '')) || 0;
     const kembalian = nominalBayar > total ? nominalBayar - total : 0;
 
-    const handlePay = () => {
+    const [isPaying, setIsPaying] = useState(false);
+
+    const handlePay = async () => {
         if (cartItems.length === 0) {
             setAlertState({
                 type: 'danger',
@@ -31,18 +34,32 @@ function Keranjang() {
             return;
         }
 
-        // Pembayaran berhasil
-        setAlertState({
-            type: 'success',
-            title: 'Pembayaran Berhasil!',
-            message: 'Transaksi sukses. Terima kasih telah berbelanja.',
-            total,
-            paid: nominalBayar,
-            change: kembalian
-        });
+        setIsPaying(true);
+        try {
+            await transaksiApi(cartItems.map((item) => ({
+                id_produk: item.id_produk,
+                qty: item.qty
+            })));
 
-        clearCart();
-        setBayar('');
+            setAlertState({
+                type: 'success',
+                title: 'Pembayaran Berhasil!',
+                message: 'Transaksi dan detailnya berhasil disimpan.',
+                total,
+                paid: nominalBayar,
+                change: kembalian
+            });
+            clearCart();
+            setBayar('');
+        } catch (error) {
+            setAlertState({
+                type: 'danger',
+                title: 'Transaksi Gagal!',
+                message: error.response?.data?.message || 'Transaksi tidak dapat disimpan.'
+            });
+        } finally {
+            setIsPaying(false);
+        }
     };
 
     return (
@@ -159,7 +176,7 @@ function Keranjang() {
 
                 {/* <!-- PAY BUTTON --> */}
                 <ButtonPay 
-                    disabled={cartItems.length === 0}
+                    disabled={cartItems.length === 0 || isPaying}
                     onClick={handlePay}
                 />
             </div>
