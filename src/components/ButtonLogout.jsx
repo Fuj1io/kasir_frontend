@@ -14,7 +14,7 @@ function ButtonLogout() {
       console.log("Logout API error:", e.message);
     } finally {
       logout();
-      navigate("/login", { replace: true });
+      navigate("/login", { replace: true, state: { logoutSuccess: true } });
     }
   };
 

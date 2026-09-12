@@ -7,6 +7,10 @@ import Pengaturan from "../pages/Pengaturan.jsx";
 import LoginPage from "../pages/LoginPage.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
+// testting
+import AlertTransaksi from "../components/AlertTransaksi.jsx";
+import TransaksiSukses from "../components/AlertTransaksi.jsx";
+
 const ProtectedRoute = ({ children }) => {
     const { token, loading } = useAuth();
     if (loading) return <div className="d-flex justify-content-center align-items-center vh-100">Loading...</div>;
@@ -34,4 +38,9 @@ export const router = createBrowserRouter([
             { path: "/pengaturan", element: <Pengaturan /> },
         ]
     },
+    // path testing view
+    {
+        path: "/view",
+        element : < TransaksiSukses/>
+    }
 ]);

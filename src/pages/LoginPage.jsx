@@ -1,15 +1,23 @@
 import "../styles/loginPage.css";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { userApi } from "../services/loader.js";
 import { useAuth } from "../context/AuthContext.jsx";
+import AlertAuthentication from "../components/AlertAuthentication.jsx";
 
 function LoginPage() {
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
+    const location = useLocation();
+    const [showLogoutAlert, setShowLogoutAlert] = useState(Boolean(location.state?.logoutSuccess));
     const { login } = useAuth();
+
+    const closeLogoutAlert = () => {
+        setShowLogoutAlert(false);
+        navigate(location.pathname, { replace: true, state: null });
+    };
 
     const Auth = async(event) => {
         event.preventDefault();
@@ -37,6 +45,8 @@ function LoginPage() {
     }
 
     return (
+        <>
+        {showLogoutAlert && <AlertAuthentication onClose={closeLogoutAlert} />}
         <div className="card login-card">
             {/* Icon  */}
             <div className="text-center">
@@ -93,6 +103,7 @@ function LoginPage() {
 
             </form>
         </div>
+        </>
     )
 }
 

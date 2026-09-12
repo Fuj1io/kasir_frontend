@@ -35,7 +35,10 @@ function Keranjang() {
         setAlertState({
             type: 'success',
             title: 'Pembayaran Berhasil!',
-            message: `Transaksi sukses. Kembalian: Rp ${kembalian.toLocaleString("id-ID")}`
+            message: 'Transaksi sukses. Terima kasih telah berbelanja.',
+            total,
+            paid: nominalBayar,
+            change: kembalian
         });
 
         clearCart();
@@ -49,6 +52,9 @@ function Keranjang() {
                     type={alertState.type}
                     title={alertState.title}
                     message={alertState.message}
+                    total={alertState.total}
+                    paid={alertState.paid}
+                    change={alertState.change}
                     onClose={() => setAlertState(null)}
                 />
             )}

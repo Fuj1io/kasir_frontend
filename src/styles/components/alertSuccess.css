@@ -20,24 +20,24 @@
 }
 
 .alert-title {
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
     color: #1b5e20;
 }
 
 .alert-text {
-    font-size: 11px;
+    font-size: 12px;
     color: #212529;
     line-height: 1.35;
 }
 
 .btn-view {
     height: 32px;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 600;
 }
 
 .btn-close-custom {
     color: #495057;
-    font-size: 14px;
+    font-size: 12px;
 }

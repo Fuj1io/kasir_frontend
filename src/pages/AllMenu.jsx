@@ -111,13 +111,13 @@ function AllMenuMenu() {
                 <div className="row row-cols-2 row-cols-md-4 g-2 text-center" style={{ maxHeight: "70vh", overflowY: "auto" }} onScroll={handleScroll}>
                     {produks?.map((produk, index) => (
                         <div className="col" key={index}>
-                            <div className="product-card">
+                            <div className="product-card" style={{minHeight: "150px"}}>
                                 <div className="product-image">
                                     <i className="bi bi-image"></i>
                                 </div>
-                                <div className="px-2 py-1">
+                                <div className="px-2 py-1 ">
                                     <div className="product-name">{produk.nama_produk}</div>
-                                    <div className="product-price">Rp.{produk.harga}</div>
+                                    <div className="product-price py-2">Rp.{produk.harga}</div>
                                     <ButtonAddItem produk={produk} />
                                 </div>
                             </div>

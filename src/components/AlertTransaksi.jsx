@@ -1,41 +1,40 @@
-import "../styles/components/alertSuccess.css";
-
-function AlertTransaksi({ type = "success", title, message, onClose }) {
+function AlertTransaksi({ type = "success", title = "Transaksi Berhasil!", message, total, paid, change, onClose }) {
     const isSuccess = type === "success";
 
     return (
-        <div 
-            className={`alert card ${isSuccess ? "success-alert border-success" : "danger-alert border-danger"} shadow-lg position-fixed top-50 start-50 translate-middle z-3 text-center bg-light`} 
-            style={{ maxWidth: "380px", width: "90%" }}
-            role="alert"
-        >
-            <div className="card-body p-3">
-                <div className="d-flex gap-3 align-items-start">
-                    <div className={`rounded-circle d-flex align-items-center justify-content-center p-2 text-white ${isSuccess ? "bg-success" : "bg-danger"}`}>
-                        <i className={`bi ${isSuccess ? "bi-check-lg" : "bi-x-lg"}`}></i>
+        <section className="position-fixed top-50 start-50 translate-middle z-3" style={{ width: "min(500px, 90vw)" }}>
+            <div className="card shadow border-0 rounded-4 p-4 mx-auto" style={{ maxWidth: 500 + "px" }}>
+                <div className="text-center mb-4">
+                    <div className={`d-inline-flex align-items-center justify-content-center bg-white border border-${isSuccess ? "success" : "danger"} rounded-circle`}
+                        style={{ width: 80 + "px", height: 80 + "px" }}>
+                        <i className={`bi bi-${isSuccess ? "check-lg" : "x-lg"} fs-1 text-${isSuccess ? "success" : "danger"}`}></i>
                     </div>
-
-                    <div className="flex-grow-1">
-                        <div className="d-flex justify-content-between align-items-start mb-1">
-                            <span className={`alert-title fw-bold text-center flex-grow-1 ${isSuccess ? "text-success" : "text-danger"}`}>
-                                {title || (isSuccess ? "Transaksi Berhasil!" : "Transaksi Gagal!")}
-                            </span>
-                            <button 
-                                className="btn btn-close btn-sm border-0 p-0 btn-close-custom" 
-                                aria-label="Close" 
-                                onClick={onClose}
-                            >
-                            </button>
-                        </div>
-
-                        <p className="alert-text mb-0 text-muted small">
-                            {message}
-                        </p>
-                    </div>
+                    <h3 className="fw-bold mt-3 mb-1">{title}</h3>
+                    <p className="text-muted mb-0">{message || "Terima kasih telah berbelanja"}</p>
                 </div>
+                {isSuccess && <div className="border rounded-3 p-3 mb-3 bg-white">
+                    <div className="d-flex justify-content-between mb-2">
+                        <span className="text-secondary">Total Belanja</span>
+                        <span className="fw-semibold">Rp {total?.toLocaleString("id-ID")}</span>
+                    </div>
+                    <div className="d-flex justify-content-between mb-2">
+                        <span className="text-secondary">Uang Dibayar</span>
+                        <span className="fw-semibold">Rp {paid?.toLocaleString("id-ID")}</span>
+                    </div>
+                    <hr />
+                    <div className="d-flex justify-content-between align-items-center">
+                        <span className="fw-bold text-dark fs-5">Kembalian</span>
+                        <span className="fw-bold text-success fs-5">Rp {change?.toLocaleString("id-ID")}</span>
+                    </div>
+                </div>}
+                <button type="button"
+                    className={`btn btn-${isSuccess ? "secondary" : "danger"} btn-lg w-100 rounded-3 py-2 fw-medium text-white`}
+                    onClick={onClose}>
+                    {isSuccess ? "OK (Transaksi Baru)" : "Tutup"}
+                </button>
             </div>
-        </div>
-    );
+        </section >
+    )
 }
 
 export default AlertTransaksi;
