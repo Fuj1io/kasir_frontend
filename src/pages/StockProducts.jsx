@@ -1,5 +1,13 @@
+import { useEffect, useState } from "react";
+import { produkApi } from "../services/loader.js";
 import "../styles/stockProducts.css";
 function StockProducts() {
+    const [produks, setProduks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    // ponytail: fetch tanpa pagination/search, upgrade ke page/limit/s param saat data >20 atau butuh filter
+    useEffect(() => {
+        produkApi().then(r => setProduks(r.data || [])).catch(e => console.log(e.message)).finally(() => setLoading(false));
+    }, []);
     return (
         <main class="main-content flex-grow-1 d-flex flex-column">
             {/* fTOPBAR  */}
@@ -53,120 +61,23 @@ function StockProducts() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {/* ROW 1  */}
-                                <tr>
-                                    <td class="text-center">
-                                        1
-                                    </td>
-                                    <td>
-                                        <div class="product-image">
-                                            <i class="bi bi-image"></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-semibold">
-                                        Nasi Goreng
-                                    </td>
-                                    <td>
-                                        Makanan
-                                    </td>
-                                    <td>
-                                        Rp 15.000
-                                    </td>
-                                    <td>
-                                        25
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge status-badge status-safe">
-                                            Aman
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <button class="btn btn-outline-secondary action-btn">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-outline-secondary action-btn">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
+                                {loading && <tr><td colSpan="8" className="text-center py-3">Loading...</td></tr>}
+                                {!loading && produks.length === 0 && <tr><td colSpan="8" className="text-center py-3">Tidak ada produk</td></tr>}
+                                {!loading && produks.map((p, i) => {
+                                    const s = p.stok === 0 ? ["habis","status-danger"] : p.stok <= 5 ? ["menipis","status-warning"] : ["Aman","status-safe"];
+                                    return (
+                                <tr key={p.id_produk || i}>
+                                    <td className="text-center">{i+1}</td>
+                                    <td><div className="product-image"><i className="bi bi-image"></i></div></td>
+                                    <td className="fw-semibold">{p.nama_produk}</td>
+                                    <td>{p.Kategori?.nama_kategori || "-"}</td>
+                                    <td>Rp {Number(p.harga).toLocaleString("id-ID")}</td>
+                                    <td>{p.stok}</td>
+                                    <td className="text-center"><span className={`badge status-badge ${s[1]}`}>{s[0]}</span></td>
+                                    <td><div className="d-flex gap-1"><button className="btn btn-outline-secondary action-btn"><i className="bi bi-pencil"></i></button><button className="btn btn-outline-secondary action-btn"><i className="bi bi-trash"></i></button></div></td>
                                 </tr>
-                                {/* ROW 2  */}
-                                <tr>
-                                    <td class="text-center">
-                                        1
-                                    </td>
-                                    <td>
-                                        <div class="product-image">
-                                            <i class="bi bi-image"></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-semibold">
-                                        Nasi Goreng
-                                    </td>
-                                    <td>
-                                        Makanan
-                                    </td>
-                                    <td>
-                                        Rp 15.000
-                                    </td>
-                                    <td>
-                                        25
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge status-badge status-danger">
-                                            habis
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <button class="btn btn-outline-secondary action-btn">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-outline-secondary action-btn">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                {/* ROW 3  */}
-                                <tr>
-                                    <td class="text-center">
-                                        1
-                                    </td>
-                                    <td>
-                                        <div class="product-image">
-                                            <i class="bi bi-image"></i>
-                                        </div>
-                                    </td>
-                                    <td class="fw-semibold">
-                                        Nasi Goreng
-                                    </td>
-                                    <td>
-                                        Makanan
-                                    </td>
-                                    <td>
-                                        Rp 15.000
-                                    </td>
-                                    <td>
-                                        25
-                                    </td>
-                                    <td class="text-center">
-                                        <span class="badge status-badge status-warning">
-                                            menipis
-                                        </span>
-                                    </td>
-                                    <td>
-                                        <div class="d-flex gap-1">
-                                            <button class="btn btn-outline-secondary action-btn">
-                                                <i class="bi bi-pencil"></i>
-                                            </button>
-                                            <button class="btn btn-outline-secondary action-btn">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    )
+                                })}
                             </tbody>
                         </table>
                     </div>
