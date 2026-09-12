@@ -104,18 +104,18 @@
  }
 
  .status-safe {
-     background-color: #e8f5e9;
-     color: #198754;
+     background-color: #198754;
+     color: #fff;
  }
 
  .status-warning {
-     background-color: #fff3cd;
-     color: #fd7e14;
+     background-color: #ffc107;
+     color: #212529;
  }
 
  .status-danger {
-     background-color: #f8d7da;
-     color: #dc3545;
+     background-color: #dc3545;
+     color: #fff;
  }
 
  /* =========================

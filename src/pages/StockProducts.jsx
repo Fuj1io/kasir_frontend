@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { produkApi } from "../services/loader.js";
 import "../styles/stockProducts.css";
+import LoadingElement from "../components/LoadingElement.jsx";
+
 function StockProducts() {
     const [produks, setProduks] = useState([]);
-    const [loading, setLoading] = useState(true);
-    // ponytail: fetch tanpa pagination/search, upgrade ke page/limit/s param saat data >20 atau butuh filter
+    const [loading, setLoading] = useState(true) ;
+   
     useEffect(() => {
         produkApi().then(r => setProduks(r.data || [])).catch(e => console.log(e.message)).finally(() => setLoading(false));
     }, []);
+    
     return (
         <main class="main-content flex-grow-1 d-flex flex-column">
             {/* fTOPBAR  */}
@@ -61,7 +64,9 @@ function StockProducts() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {loading && <tr><td colSpan="8" className="text-center py-3">Loading...</td></tr>}
+                                {loading && <tr><td colSpan="8" className="text-center py-3">
+                                    <LoadingElement/>
+                                    </td></tr>}
                                 {!loading && produks.length === 0 && <tr><td colSpan="8" className="text-center py-3">Tidak ada produk</td></tr>}
                                 {!loading && produks.map((p, i) => {
                                     const s = p.stok === 0 ? ["habis","status-danger"] : p.stok <= 5 ? ["menipis","status-warning"] : ["Aman","status-safe"];

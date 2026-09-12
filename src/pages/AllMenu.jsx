@@ -7,6 +7,7 @@ import Keranjang from "../pages/Keranjang.jsx";
 import Search from "../components/Search.jsx";
 import KategoriButton from "../components/KategoriButton.jsx";
 import ButtonAddItem from "../components/ButtonAddItem.jsx";
+import LoadingElement from "../components/LoadingElement.jsx";
 
 function AllMenuMenu() {
     const [searchParams, setSearchParams] = useSearchParams();
@@ -123,12 +124,10 @@ function AllMenuMenu() {
                             </div>
                         </div>
                     ))}
-                     <div className="col" style={{rowSpan: "8"}}>
-                        {loading && <div className="py-3">Loading...</div>}
-                        {!loading && produks.length === 0 && <div className="py-3 text-muted">Tidak ada data ditemukan</div>}
-                        {!hasMore && produks.length > 0 && <div className="py-3 text-muted">Semua data telah ditampilkan</div>}
-                        </div>
                 </div>
+                {loading && <LoadingElement />}
+                {!loading && produks.length === 0 && <div className="py-3 text-muted text-center">Tidak ada data ditemukan</div>}
+                {!loading && !hasMore && produks.length > 0 && <div className="py-3 text-muted text-center">Semua data telah ditampilkan</div>}
             </section>
             <Keranjang />
         </>

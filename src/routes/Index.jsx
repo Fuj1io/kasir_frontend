@@ -8,8 +8,8 @@ import LoginPage from "../pages/LoginPage.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
 
 // testting
-import AlertTransaksi from "../components/AlertTransaksi.jsx";
-import TransaksiSukses from "../components/AlertTransaksi.jsx";
+
+import Loading from "../components/LoadingElement.jsx";
 
 const ProtectedRoute = ({ children }) => {
     const { token, loading } = useAuth();
@@ -41,6 +41,6 @@ export const router = createBrowserRouter([
     // path testing view
     {
         path: "/view",
-        element : < TransaksiSukses/>
+        element : < Loading/>
     }
 ]);
