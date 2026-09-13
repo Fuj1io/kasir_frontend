@@ -4,12 +4,23 @@ import "../styles/stockProducts.css";
 import LoadingElement from "../components/LoadingElement.jsx";
 
 function StockProducts() {
+    const itemsPerPage = 20;
     const [produks, setProduks] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true) ;
    
     useEffect(() => {
-        produkApi().then(r => setProduks(r.data || [])).catch(e => console.log(e.message)).finally(() => setLoading(false));
-    }, []);
+        setLoading(true);
+        produkApi({ page: currentPage, limit: itemsPerPage, s: searchTerm.trim() })
+            .then((r) => {
+                setProduks(r.data || []);
+                setTotalPages(Math.max(1, r.totalPages || 1));
+            })
+            .catch((e) => console.log(e.message))
+            .finally(() => setLoading(false));
+    }, [currentPage, searchTerm]);
     
     return (
         <main class="main-content flex-grow-1 d-flex flex-column">
@@ -22,7 +33,16 @@ function StockProducts() {
                         <span class="input-group-text bg-white">
                             <i class="bi bi-search search-icon"></i>
                         </span>
-                        <input type="text" class="form-control border-start-0" placeholder="Cari produk...">
+                        <input
+                            type="text"
+                            class="form-control border-start-0"
+                            placeholder="Cari produk..."
+                            value={searchTerm}
+                            onChange={(e) => {
+                                setSearchTerm(e.target.value);
+                                setCurrentPage(1);
+                            }}
+                        >
                         </input>
                     </div>
                     {/* TAMBAH PRODUK  */}
@@ -72,7 +92,7 @@ function StockProducts() {
                                     const s = p.stok === 0 ? ["habis","status-danger"] : p.stok <= 5 ? ["menipis","status-warning"] : ["Aman","status-safe"];
                                     return (
                                 <tr key={p.id_produk || i}>
-                                    <td className="text-center">{i+1}</td>
+                                    <td className="text-center">{(currentPage - 1) * itemsPerPage + i + 1}</td>
                                     <td><div className="product-image"><i className="bi bi-image"></i></div></td>
                                     <td className="fw-semibold">{p.nama_produk}</td>
                                     <td>{p.Kategori?.nama_kategori || "-"}</td>
@@ -91,40 +111,32 @@ function StockProducts() {
                 <div class="d-flex align-items-center justify-content-center gap-3 mt-2">
                     <nav>
                         <ul class="pagination pagination-sm mb-0">
-                            <li class="page-item">
-                                <a class="page-link" href="#">
+                            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                <button className="page-link" type="button" onClick={() => setCurrentPage(1)} disabled={currentPage === 1}>
                                     «
-                                </a>
+                                </button>
                             </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
+                            <li className={`page-item ${currentPage === 1 ? "disabled" : ""}`}>
+                                <button className="page-link" type="button" onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
                                     ‹
-                                </a>
+                                </button>
                             </li>
-                            <li class="page-item active">
-                                <a class="page-link" href="#">
-                                    1
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    2
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
-                                    3
-                                </a>
-                            </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
+                            {Array.from({ length: totalPages }, (_, index) => index + 1).map((pageNumber) => (
+                                <li className={`page-item ${pageNumber === currentPage ? "active" : ""}`} key={pageNumber}>
+                                    <button className="page-link" type="button" onClick={() => setCurrentPage(pageNumber)}>
+                                        {pageNumber}
+                                    </button>
+                                </li>
+                            ))}
+                            <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                                <button className="page-link" type="button" onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage === totalPages}>
                                     ›
-                                </a>
+                                </button>
                             </li>
-                            <li class="page-item">
-                                <a class="page-link" href="#">
+                            <li className={`page-item ${currentPage === totalPages ? "disabled" : ""}`}>
+                                <button className="page-link" type="button" onClick={() => setCurrentPage(totalPages)} disabled={currentPage === totalPages}>
                                     »
-                                </a>
+                                </button>
                             </li>
                         </ul>
                     </nav>

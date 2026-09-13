@@ -8,7 +8,7 @@ export const AuthProvider = ({ children }) => {
         const stored = localStorage.getItem("authToken");
         return stored ? stored : null;
     });
-    const [loading, setLoading] = useState(true); // to avoid flicker on init
+    const [loading, setLoading] = useState(true); // ketika data kosong
 
     useEffect(() => {
         if (token) {
