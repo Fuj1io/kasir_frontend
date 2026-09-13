@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { produkApi } from "../services/loader.js";
 import "../styles/stockProducts.css";
 import LoadingElement from "../components/LoadingElement.jsx";
+import FormAddData from "../components/FormAddData.jsx";
+import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
 
 function StockProducts() {
     const itemsPerPage = 20;
@@ -10,6 +12,8 @@ function StockProducts() {
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const [loading, setLoading] = useState(true) ;
+    const [alert, setAlert] = useState(null);
+    const [refreshKey, setRefreshKey] = useState(0);
    
     useEffect(() => {
         setLoading(true);
@@ -20,14 +24,24 @@ function StockProducts() {
             })
             .catch((e) => console.log(e.message))
             .finally(() => setLoading(false));
-    }, [currentPage, searchTerm]);
+    }, [currentPage, searchTerm, refreshKey]);
     
+    const handleSaved = (msg) => {
+        setAlert({ message: msg, variant: "success" });
+        setRefreshKey((k) => k + 1);
+    };
+
+    const handleFailed = (msg) => {
+        setAlert({ message: msg, variant: "error" });
+    };
+
     return (
         <main class="main-content flex-grow-1 d-flex flex-column">
             {/* fTOPBAR  */}
             <div class="content p-3">
+                {alert && <AlertSuksesAddData message={alert.message} variant={alert.variant} onClose={() => setAlert(null)} />}
                 {/* SEARCH + ADD BUTTON */}
-                <div class="d-flex align-items-center justify-content-between mb-2">
+                <div class="d-flex align-items-center justify-content-between mb-2 gap-1">
                     {/* SEARCH  */}
                     <div class="input-group search-box">
                         <span class="input-group-text bg-white">
@@ -46,7 +60,7 @@ function StockProducts() {
                         </input>
                     </div>
                     {/* TAMBAH PRODUK  */}
-                    <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1 mx-2"  >
+                    <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"  style={{marginBottom: "7px"}} data-bs-toggle="modal" data-bs-target="#modalAdd">
                         <i class="bi bi-plus-lg me-1"></i>
                         <span>Tambah</span>
                     </button>
@@ -89,7 +103,7 @@ function StockProducts() {
                                     </td></tr>}
                                 {!loading && produks.length === 0 && <tr><td colSpan="8" className="text-center py-3">Tidak ada produk</td></tr>}
                                 {!loading && produks.map((p, i) => {
-                                    const s = p.stok === 0 ? ["habis","status-danger"] : p.stok <= 5 ? ["menipis","status-warning"] : ["Aman","status-safe"];
+                                    const s = p.stok === 0 ? ["habis","status-danger"] : p.stok <= 10 ? ["menipis","status-warning"] : ["Aman","status-safe"];
                                     return (
                                 <tr key={p.id_produk || i}>
                                     <td className="text-center">{(currentPage - 1) * itemsPerPage + i + 1}</td>
@@ -163,14 +177,14 @@ function StockProducts() {
                         <div class="status-info-item d-flex align-items-center gap-1">
                             <span class="status-dot dot-green"></span>
                             <span>
-                                Aman (Stok &gt; 5)
+                                Aman (Stok &gt; 10)
                             </span>
                         </div>
                         {/* MENIPIS */}
                         <div class="status-info-item d-flex align-items-center gap-1">
                             <span class="status-dot dot-orange"></span>
                             <span>
-                                Menipis (Stok 1 - 5)
+                                Menipis (Stok 1 - 10)
                             </span>
                         </div>
                         {/* HABIS  */}
@@ -183,6 +197,7 @@ function StockProducts() {
                     </div>
                 </div>
             </div>
+            <FormAddData onSaved={handleSaved} onFailed={handleFailed} />
         </main>
     )
 }

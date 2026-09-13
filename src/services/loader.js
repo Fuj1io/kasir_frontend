@@ -18,6 +18,11 @@ export const produkApi = async (params = {}) => {
     return produk.data;
 };
 
+export const tambahProdukApi = async (payload) => {
+    const res = await axios.post(urlProduk, payload, { withCredentials: true });
+    return res.data;
+};
+
 export const transaksiApi = async (items) => {
     const token = localStorage.getItem("authToken");
     const transaksi = await axios.post(urlTransaksi, { items }, {

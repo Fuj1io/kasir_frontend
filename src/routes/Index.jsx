@@ -6,14 +6,18 @@ import Laporan from "../pages/Laporan.jsx";
 import Pengaturan from "../pages/Pengaturan.jsx";
 import LoginPage from "../pages/LoginPage.jsx";
 import { useAuth } from "../context/AuthContext.jsx";
+import LoadingElement from "../components/LoadingElement.jsx";
 
 // testting
+import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
+import FormAddData from "../components/FormAddData.jsx"
 
-import Loading from "../components/LoadingElement.jsx";
 
 const ProtectedRoute = ({ children }) => {
     const { token, loading } = useAuth();
-    if (loading) return <div className="d-flex justify-content-center align-items-center vh-100">Loading...</div>;
+    if (loading) return <div className="d-flex justify-content-center align-items-center vh-100">
+        <LoadingElement />
+    </div>;
     if (!token) return <Navigate to="/login" replace />;
     return children;
 };
@@ -41,6 +45,6 @@ export const router = createBrowserRouter([
     // path testing view
     {
         path: "/view",
-        element : < Loading/>
+        element : < AlertSuksesAddData/>
     }
 ]);
