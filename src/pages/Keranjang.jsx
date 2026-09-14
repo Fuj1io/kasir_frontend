@@ -52,6 +52,7 @@ function Keranjang({ onSuccess }) {
             clearCart();
             setBayar('');
             onSuccess?.();
+            window.dispatchEvent(new Event("produk:refresh"));
         } catch (error) {
             setAlertState({
                 type: 'danger',

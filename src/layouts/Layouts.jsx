@@ -1,9 +1,35 @@
+import { useState, useEffect } from "react";
 import UserIsLogedIn from "../components/UserIsLogedIn";
 import ButtonLogout from "../components/ButtonLogout";
+import AlertStokMenipis from "../components/AlertStokMenipis";
+import { produkApi } from "../services/loader.js";
 import "../styles/homePage.css";
 import { NavLink, Outlet } from "react-router";
 
 function Layouts() {
+    const [menipisItems, setMenipisItems] = useState([]);
+    const [showAlert, setShowAlert] = useState(true);
+
+    useEffect(() => {
+        let alive = true;
+        const fetchMenipis = async () => {
+            try {
+                const res = await produkApi({ page: 1, limit: 1000 });
+                const list = res.data || [];
+                const filtered = list.filter((p) => p.status === "menipis" || (Number(p.stok) > 0 && Number(p.stok) <= 10));
+                if (alive) {
+                    setMenipisItems(filtered);
+                    if (filtered.length) setShowAlert(true);
+                }
+            } catch {}
+        };
+        fetchMenipis();
+        const id = setInterval(fetchMenipis, 30000);
+        const onRefresh = () => fetchMenipis();
+        window.addEventListener("produk:refresh", onRefresh);
+        return () => { alive = false; clearInterval(id); window.removeEventListener("produk:refresh", onRefresh); };
+    }, []);
+
     return (
         <div className="d-flex" style={{ width: 100 + 'vw' }}>
             <aside className="sidebar d-flex flex-column">
@@ -29,9 +55,11 @@ function Layouts() {
                         <span className="menu-text">
                             Stok Produk
                         </span>
-                        <span className="badge bg-danger rounded-pill ms-auto">
-                            3
-                        </span>
+                        {menipisItems.length > 0 && (
+                            <span className="badge bg-danger rounded-pill ms-auto" id="stok-notif-danger">
+                                {menipisItems.length}
+                            </span>
+                        )}
                     </NavLink>
                     {/* <!-- LAPORAN --> */}
                     <NavLink to="/laporan" className="menu-item d-flex align-items-center gap-2 px-2 py-2 ">
@@ -78,6 +106,9 @@ function Layouts() {
                     <Outlet />
                 </div>
             </main>
+            {showAlert && menipisItems.length > 0 && (
+                <AlertStokMenipis items={menipisItems} onClose={() => setShowAlert(false)} />
+            )}
         </div>
     )
 }

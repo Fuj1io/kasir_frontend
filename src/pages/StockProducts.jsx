@@ -31,6 +31,7 @@ function StockProducts() {
     const handleSaved = (msg) => {
         setAlert({ message: msg, variant: "success" });
         setRefreshKey((k) => k + 1);
+        window.dispatchEvent(new Event("produk:refresh"));
     };
 
     const handleFailed = (msg) => {
@@ -59,6 +60,7 @@ function StockProducts() {
             const res = await deleteProdukApi(produk.id_produk);
             setAlert({ message: res.message || res.msg || "Produk berhasil dihapus", variant: "success" });
             setRefreshKey((k) => k + 1);
+            window.dispatchEvent(new Event("produk:refresh"));
         } catch (err) {
             setAlert({ message: err.response?.data?.msg || err.response?.data?.message || "Gagal hapus produk", variant: "error" });
         }
