@@ -3,6 +3,7 @@ import axios from "axios";
 const urlUser = import.meta.env.VITE_USER_API;
 const urlProduk = import.meta.env.VITE_PRODUK_API;
 const urlTransaksi = import.meta.env.VITE_TRANSAKSI_API || urlProduk.replace(/\/produk\/?$/, "/transaksi");
+const urlLaporan = import.meta.env.VITE_LAPORAN_API || urlProduk.replace(/\/produk\/?$/, "/laporan");
 
 // API_USER
 export const userApi = async (payload) => {
@@ -40,6 +41,16 @@ export const transaksiApi = async (items) => {
         withCredentials: true
     });
     return transaksi.data;
+};
+
+export const laporanApi = async (params = {}) => {
+    const token = localStorage.getItem("authToken");
+    const res = await axios.get(urlLaporan, {
+        params,
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+    });
+    return res.data;
 };
 
 

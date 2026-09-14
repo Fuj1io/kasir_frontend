@@ -15,7 +15,7 @@ function StockProducts() {
     const [loading, setLoading] = useState(true) ;
     const [alert, setAlert] = useState(null);
     const [refreshKey, setRefreshKey] = useState(0);
-    const [editingProduk, setEditingProduk] = useState(null);
+    const [editingProduk, setEditingProduk] = useState(null); 
    
     useEffect(() => {
         setLoading(true);
