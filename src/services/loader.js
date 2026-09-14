@@ -23,6 +23,16 @@ export const tambahProdukApi = async (payload) => {
     return res.data;
 };
 
+export const updateProdukApi = async (id, payload) => {
+    const res = await axios.put(`${urlProduk}/${id}`, payload, { withCredentials: true });
+    return res.data;
+};
+
+export const deleteProdukApi = async (id) => {
+    const res = await axios.delete(`${urlProduk}/${id}`, { withCredentials: true });
+    return res.data;
+};
+
 export const transaksiApi = async (items) => {
     const token = localStorage.getItem("authToken");
     const transaksi = await axios.post(urlTransaksi, { items }, {

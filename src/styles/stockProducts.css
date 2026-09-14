@@ -129,6 +129,9 @@
     font-size: 12px;
  }
 
+ .action-btn:hover {
+    background-color: none;
+ }
  /* =========================
            PAGINATION
         ========================= */

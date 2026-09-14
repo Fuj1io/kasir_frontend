@@ -1,9 +1,14 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { Modal } from "bootstrap";
-import { tambahProdukApi } from "../services/loader.js";
+import { tambahProdukApi, updateProdukApi } from "../services/loader.js";
 
-function FormAddData({ onSaved, onFailed }) {
-    const [form, setForm] = useState({ nama_produk: "", kategori: "", harga: "", stok: "0" });
+function FormAddData({ onSaved, onFailed, initialData = null }) {
+    const [form, setForm] = useState({
+        nama_produk: initialData?.nama_produk || "",
+        kategori: initialData?.id_kategori ? String(initialData.id_kategori) : "",
+        harga: initialData?.harga ? String(initialData.harga) : "",
+        stok: initialData?.stok !== undefined ? String(initialData.stok) : "0",
+    });
     const [saving, setSaving] = useState(false);
     const [error, setError] = useState("");
     const modalRef = useRef(null);
@@ -12,6 +17,19 @@ function FormAddData({ onSaved, onFailed }) {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
     };
+
+    const isEdit = !!initialData;
+
+    useEffect(() => {
+        if (initialData) {
+            setForm({
+                nama_produk: initialData.nama_produk || "",
+                kategori: initialData.id_kategori ? String(initialData.id_kategori) : "",
+                harga: initialData.harga ? String(initialData.harga) : "",
+                stok: initialData.stok !== undefined ? String(initialData.stok) : "0",
+            });
+        }
+    }, [initialData]);
 
     const adjustStok = (delta) => {
         setForm((prev) => ({ ...prev, stok: String(Math.max(0, Number(prev.stok) + delta)) }));
@@ -42,17 +60,20 @@ function FormAddData({ onSaved, onFailed }) {
         }
         setSaving(true);
         try {
-            const result = await tambahProdukApi({
+            const payload = {
                 nama_produk: form.nama_produk.trim(),
                 kategori: Number(form.kategori),
                 harga,
                 stok,
-            });
+            };
+            const result = isEdit
+                ? await updateProdukApi(initialData.id_produk, payload)
+                : await tambahProdukApi(payload);
             setForm({ nama_produk: "", kategori: "", harga: "", stok: "0" });
             closeModal();
-            onSaved(result.message || `Produk "${form.nama_produk.trim()}" berhasil ditambahkan`);
+            onSaved(result.message || result.msg || `Produk "${form.nama_produk.trim()}" berhasil ${isEdit ? "diupdate" : "ditambahkan"}`);
         } catch (err) {
-            const msg = err.response?.data?.message || err.response?.data?.msg || "Produk gagal ditambahkan.";
+            const msg = err.response?.data?.message || err.response?.data?.msg || `Produk gagal ${isEdit ? "diupdate" : "ditambahkan"}.`;
             setError(msg);
             closeModal();
             onFailed(msg);
@@ -65,7 +86,7 @@ function FormAddData({ onSaved, onFailed }) {
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content border-0 rounded-4 p-3">
                     <div className="modal-header border-0 pb-0">
-                        <h5 className="fw-bold mb-0">Tambah Produk</h5>
+                        <h5 className="fw-bold mb-0">{isEdit ? "Edit Produk" : "Tambah Produk"}</h5>
                         <button type="button" className="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
                     </div>
                     <div className="modal-body">
@@ -106,7 +127,7 @@ function FormAddData({ onSaved, onFailed }) {
                             <div className="d-flex gap-2 pt-2">
                                 <button type="button" className="btn btn-light border w-50 rounded-3 py-2 fw-medium" data-bs-dismiss="modal">Batal</button>
                                 <button type="submit" className="btn btn-dark w-50 rounded-3 py-2 fw-medium" disabled={saving}>
-                                    {saving ? "Menyimpan..." : "Simpan Produk"}
+                                    {saving ? "Menyimpan..." : isEdit ? "Update Produk" : "Simpan Produk"}
                                 </button>
                             </div>
                         </form>
