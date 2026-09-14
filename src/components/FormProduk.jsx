@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Modal } from "bootstrap";
 import { tambahProdukApi, updateProdukApi } from "../services/loader.js";
 
-function FormAddData({ onSaved, onFailed, initialData = null }) {
+function FormProduk({ onSaved, onFailed, initialData = null }) {
     const [form, setForm] = useState({
         nama_produk: initialData?.nama_produk || "",
         kategori: initialData?.id_kategori ? String(initialData.id_kategori) : "",
@@ -28,6 +28,9 @@ function FormAddData({ onSaved, onFailed, initialData = null }) {
                 harga: initialData.harga ? String(initialData.harga) : "",
                 stok: initialData.stok !== undefined ? String(initialData.stok) : "0",
             });
+        } else {
+            setForm({ nama_produk: "", kategori: "", harga: "", stok: "0" });
+            setError("");
         }
     }, [initialData]);
 
@@ -86,7 +89,7 @@ function FormAddData({ onSaved, onFailed, initialData = null }) {
             <div className="modal-dialog modal-dialog-centered">
                 <div className="modal-content border-0 rounded-4 p-3">
                     <div className="modal-header border-0 pb-0">
-                        <h5 className="fw-bold mb-0">{isEdit ? "Edit Produk" : "Tambah Produk"}</h5>
+                        <h5 className="fw-bold mb-0">{isEdit ? "Edit Data" : "Tambah"}</h5>
                         <button type="button" className="btn-close" aria-label="Close" data-bs-dismiss="modal"></button>
                     </div>
                     <div className="modal-body">
@@ -127,7 +130,7 @@ function FormAddData({ onSaved, onFailed, initialData = null }) {
                             <div className="d-flex gap-2 pt-2">
                                 <button type="button" className="btn btn-light border w-50 rounded-3 py-2 fw-medium" data-bs-dismiss="modal">Batal</button>
                                 <button type="submit" className="btn btn-dark w-50 rounded-3 py-2 fw-medium" disabled={saving}>
-                                    {saving ? "Menyimpan..." : isEdit ? "Update Produk" : "Simpan Produk"}
+                                    {saving ? "Menyimpan..." : isEdit ? "Update" : "Simpan"}
                                 </button>
                             </div>
                         </form>
@@ -138,4 +141,4 @@ function FormAddData({ onSaved, onFailed, initialData = null }) {
     )
 }
 
-export default FormAddData;
+export default FormProduk;

@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
+import { Modal } from "bootstrap";
 import { produkApi, deleteProdukApi } from "../services/loader.js";
 import "../styles/stockProducts.css";
 import LoadingElement from "../components/LoadingElement.jsx";
-import FormAddData from "../components/FormAddData.jsx";
+import FormProduk from "../components/FormProduk.jsx";
 import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
 
 function StockProducts() {
@@ -36,11 +37,20 @@ function StockProducts() {
         setAlert({ message: msg, variant: "error" });
     };
 
+    const handleAdd = () => {
+        setEditingProduk(null);
+        setTimeout(() => {
+            const el = document.getElementById("modalAdd");
+            if (el) new Modal(el).show();
+        }, 0);
+    };
+
     const handleEdit = (produk) => {
         setEditingProduk(produk);
-        const { Modal } = window.bootstrap;
-        const el = document.getElementById("modalAdd");
-        if (el) new Modal(el).show();
+        setTimeout(() => {
+            const el = document.getElementById("modalAdd");
+            if (el) new Modal(el).show();
+        }, 0);
     };
 
     const handleDelete = async (produk) => {
@@ -79,7 +89,7 @@ function StockProducts() {
                         </input>
                     </div>
                     {/* TAMBAH PRODUK  */}
-                    <button type="button" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"  style={{marginBottom: "7px"}} data-bs-toggle="modal" data-bs-target="#modalAdd">
+                    <button type="button" id="tambah-produk" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"  style={{marginBottom: "7px"}} onClick={handleAdd}>
                         <i class="bi bi-plus-lg me-1"></i>
                         <span>Tambah</span>
                     </button>
@@ -132,7 +142,8 @@ function StockProducts() {
                                     <td>Rp {Number(p.harga).toLocaleString("id-ID")}</td>
                                     <td>{p.stok}</td>
                                     <td className="text-center"><span className={`badge status-badge ${s[1]}`}>{s[0]}</span></td>
-                                    <td><div className="d-flex gap-1"><button className="btn btn-outline-primary action-btn"  onClick={() => handleEdit(p)}><i className="bi bi-pencil"></i></button><button className="btn btn-outline-danger action-btn" onClick={() => handleDelete(p)}><i className="bi bi-trash"></i></button></div></td>
+                                    <td><div className="d-flex gap-1"><button id="update-produk" className="btn btn-outline-primary action-btn btn-edit"  onClick={() => handleEdit(p)}><i className="bi bi-pencil"></i></button>
+                                    <button id="delete-produk" className="btn btn-outline-danger action-btn" onClick={() => handleDelete(p)}><i className="bi bi-trash"></i></button></div></td>
                                 </tr>
                                     )
                                 })}
@@ -216,7 +227,7 @@ function StockProducts() {
                     </div>
                 </div>
             </div>
-            <FormAddData key={editingProduk?.id_produk || "new"} initialData={editingProduk} onSaved={(msg) => { setEditingProduk(null); handleSaved(msg); }} onFailed={(msg) => { setEditingProduk(null); handleFailed(msg); }} />
+            <FormProduk key={editingProduk?.id_produk || "new"} initialData={editingProduk} onSaved={(msg) => { setEditingProduk(null); handleSaved(msg); }} onFailed={(msg) => { setEditingProduk(null); handleFailed(msg); }} />
         </main>
     )
 }

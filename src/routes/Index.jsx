@@ -10,8 +10,6 @@ import LoadingElement from "../components/LoadingElement.jsx";
 
 // testting
 import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
-import FormAddData from "../components/FormAddData.jsx"
-
 
 const ProtectedRoute = ({ children }) => {
     const { token, loading } = useAuth();
