@@ -17,6 +17,7 @@ function AllMenuMenu() {
     const [loading, setLoading] = useState(false);
     const [keyword, setKeyword] = useState(() => searchParams.get("s") || "");
     const [kategori, setKategori] = useState(() => searchParams.get("kategori") || "Semua");
+    const [refreshKey, setRefreshKey] = useState(0);
     const loadingRef = useRef(false);
 
     // fetching_Data_start
@@ -83,6 +84,16 @@ function AllMenuMenu() {
         fetchProduk(page, keyword, kategori);
     }, [page, keyword, kategori, fetchProduk]);
 
+    useEffect(() => {
+        if (refreshKey > 0) {
+            setHasMore(true);
+            if (page !== 1) setPage(1);
+            else fetchProduk(1, keyword, kategori);
+        }
+    }, [refreshKey]);
+
+    const handleTransaksiSuccess = () => setRefreshKey((k) => k + 1);
+
     // fetch ketikaScroll_start
     const handleScroll = (e) => {
         const { scrollTop, clientHeight, scrollHeight } = e.target;
@@ -129,7 +140,7 @@ function AllMenuMenu() {
                 {!loading && produks.length === 0 && <div className="py-3 text-muted text-center">Tidak ada data ditemukan</div>}
                 {!loading && !hasMore && produks.length > 0 && <div className="py-3 text-muted text-center">Semua data telah ditampilkan</div>}
             </section>
-            <Keranjang />
+            <Keranjang onSuccess={handleTransaksiSuccess} />
         </>
     );
 }

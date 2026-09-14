@@ -4,7 +4,7 @@ import ButtonPay from "../components/ButtonPay.jsx";
 import AlertTransaksi from "../components/AlertTransaksi.jsx";
 import { transaksiApi } from "../services/loader.js";
 
-function Keranjang() {
+function Keranjang({ onSuccess }) {
     const { cartItems, updateQty, removeFromCart, clearCart } = useCart();
     const [bayar, setBayar] = useState('');
     const [alertState, setAlertState] = useState(null); // { type: 'success' | 'danger', title: '', message: '' }
@@ -51,6 +51,7 @@ function Keranjang() {
             });
             clearCart();
             setBayar('');
+            onSuccess?.();
         } catch (error) {
             setAlertState({
                 type: 'danger',
