@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { laporanApi } from "../services/loader.js";
+import { useProduk } from "../context/ProdukContext.jsx";
 
 const JENIS_MAP = {
     "Laporan Hasil Akhir": "akhir",
@@ -18,6 +19,7 @@ function Laporan() {
     const [result, setResult] = useState(null);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState("");
+    const { barangMenipisCount, loading: produkLoading } = useProduk();
 
     const fetchLaporan = async (targetJenis = jenis) => {
         setLoading(true);
@@ -45,6 +47,7 @@ function Laporan() {
     const dataMasuk = result?.jenis === "masuk" ? result.data : [];
     const dataKeluar = result?.jenis === "keluar" ? result.data : [];
     const dataAkhir = result?.jenis === "akhir" ? result.data : null;
+
 
     return (
         <section className="mb-5 container-fluid">
@@ -156,20 +159,20 @@ function Laporan() {
                             </div>
                         </div>
                     )}
-                    {!loading && activeTab === "akhir" && dataAkhir && (
+                    {activeTab === "akhir" && (
                         <div>
                             <h6 className="fw-bold mb-3">LAPORAN HASIL AKHIR</h6>
                             <div className="row g-3 mb-4">
-                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Total Penjualan</span><h4 className="fw-bold text-dark mt-1 mb-0">{fmtRp(dataAkhir.summary.totalPenjualan)}</h4></div></div>
-                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Total Barang Terjual</span><h4 className="fw-bold text-dark mt-1 mb-0">{dataAkhir.summary.totalBarangTerjual} item</h4></div></div>
-                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Barang Menipis</span><h4 className="fw-bold text-dark mt-1 mb-0">{dataAkhir.summary.barangMenipis} produk</h4></div></div>
-                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Total Transaksi</span><h4 className="fw-bold text-dark mt-1 mb-0">{dataAkhir.summary.totalTransaksi} transaksi</h4></div></div>
+                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Total Penjualan</span><h4 className="fw-bold text-dark mt-1 mb-0" style={{minHeight:"45px"}}>{loading ? "..." : fmtRp(dataAkhir?.summary?.totalPenjualan ?? 0)}</h4></div></div>
+                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Total Barang Terjual</span><h4 className="fw-bold text-dark mt-1 mb-0" style={{minHeight:"45px"}}>{loading ? "..." : `${dataAkhir?.summary?.totalBarangTerjual ?? 0} item`}</h4></div></div>
+                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Barang Menipis</span><h4 className="fw-bold text-dark mt-1 mb-0" id="barang-menipis">{produkLoading && !dataAkhir ? "..." : `${barangMenipisCount || dataAkhir?.summary?.barangMenipis || 0} produk`}</h4><small className="text-muted" style={{ fontSize: "0.7rem" }}>status: menipis (stok 1-10)</small></div></div>
+                                <div className="col-md-3"><div className="card border p-3 rounded-3 shadow-sm"><span className="text-muted small">Total Transaksi</span><h4 className="fw-bold text-dark mt-1 mb-0" style={{minHeight:"45px"}}>{loading ? "..." : `${dataAkhir?.summary?.totalTransaksi ?? 0} transaksi`}</h4></div></div>
                             </div>
                             <div className="table-responsive">
                                 <table className="table table-bordered align-middle text-center small">
                                     <thead className="table-light"><tr><th>No</th><th>Tanggal</th><th>Kasir</th><th>Total</th><th>Item</th></tr></thead>
                                     <tbody>
-                                        {dataAkhir.transaksiList.length === 0 ? <tr><td colSpan={5} className="text-muted">Tidak ada transaksi</td></tr> : dataAkhir.transaksiList.map((t, i) => (
+                                        {!dataAkhir || dataAkhir.transaksiList.length === 0 ? <tr><td colSpan={5} className="text-muted">Tidak ada transaksi</td></tr> : dataAkhir.transaksiList.map((t, i) => (
                                             <tr key={t.id_transaksi}><td>{i + 1}</td><td>{fmtDate(t.tanggal_transaksi)}</td><td>{t.User?.username || t.id_user}</td><td>{fmtRp(t.total_bayar)}</td><td>{t.detail_transaksis?.map(d => `${d.Produk?.nama_produk} x${d.qty}`).join(", ") || "-"}</td></tr>
                                         ))}
                                     </tbody>
