@@ -20,17 +20,29 @@ export const produkApi = async (params = {}) => {
 };
 
 export const tambahProdukApi = async (payload) => {
-    const res = await axios.post(urlProduk, payload, { withCredentials: true });
+    const token = localStorage.getItem("authToken");
+    const res = await axios.post(urlProduk, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+    });
     return res.data;
 };
 
 export const updateProdukApi = async (id, payload) => {
-    const res = await axios.put(`${urlProduk}/${id}`, payload, { withCredentials: true });
+    const token = localStorage.getItem("authToken");
+    const res = await axios.put(`${urlProduk}/${id}`, payload, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+    });
     return res.data;
 };
 
 export const deleteProdukApi = async (id) => {
-    const res = await axios.delete(`${urlProduk}/${id}`, { withCredentials: true });
+    const token = localStorage.getItem("authToken");
+    const res = await axios.delete(`${urlProduk}/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true
+    });
     return res.data;
 };
 

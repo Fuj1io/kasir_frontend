@@ -101,3 +101,15 @@ body {
     background-color: #343a40;
     color: white;
 }
+
+.rounded-select {
+    border-radius: 12px; /* Mengatur tingkat kelengkungan sudut */
+    padding: 10px 15px;    /* Jarak dalam agar tidak terlalu padat */
+    border: 2px solid #ccc; /* Garis tepi */
+    font-size: 16px;
+    outline: none;
+  }
+
+.rounded-select2:focus {
+            border-color: #007bff; /* Warna border saat diklik */
+        }

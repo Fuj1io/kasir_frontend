@@ -9,7 +9,7 @@ import { useAuth } from "../context/AuthContext.jsx";
 import LoadingElement from "../components/LoadingElement.jsx";
 
 // testting
-import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
+import SignUp from "../pages/SignUp.jsx";
 
 const ProtectedRoute = ({ children }) => {
     const { token, loading } = useAuth();
@@ -43,6 +43,6 @@ export const router = createBrowserRouter([
     // path testing view
     {
         path: "/view",
-        element : < AlertSuksesAddData/>
+        element : < SignUp/>
     }
 ]);

@@ -68,14 +68,14 @@ function Laporan() {
                             <label className="form-label small text-muted mb-1">Dari Tanggal</label>
                             <div className="input-group input-group-sm">
                                 <input type="date" className="form-control" value={dari} onChange={e => setDari(e.target.value)} />
-                                <span className="input-group-text bg-white"><i className="bi bi-calendar"></i></span>
+                                {/* <span className="input-group-text bg-white"><i className="bi bi-calendar"></i></span> */}
                             </div>
                         </div>
                         <div className="col-md-3">
                             <label className="form-label small text-muted mb-1">Sampai Tanggal</label>
                             <div className="input-group input-group-sm">
                                 <input type="date" className="form-control" value={sampai} onChange={e => setSampai(e.target.value)} />
-                                <span className="input-group-text bg-white"><i className="bi bi-calendar"></i></span>
+                                {/* <span className="input-group-text bg-white"><i className="bi bi-calendar"></i></span> */}
                             </div>
                         </div>
                         <div className="col-md-3 d-flex gap-1 mb-3">

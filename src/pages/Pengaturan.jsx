@@ -4,13 +4,14 @@ function Pengaturan() {
     return (
         <div className="container-fluid ">
             <h1>Pengaturan</h1>
+            <button className="btn btn-success btn-lg">Tambah Pengguna</button>
             {/* <!-- Button trigger modal --> */}
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productController">
+            {/* <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#productController">
                 Launch demo modal
-            </button>
+            </button> */}
 
             {/* <!-- Modal --> */}
-            <div class="modal fade" id="productController" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            {/* <div class="modal fade" id="productController" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -25,7 +26,8 @@ function Pengaturan() {
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
+            {/* <h3>Comming Soon..</h3> */}
         </div>
     )
 }

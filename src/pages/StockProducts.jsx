@@ -5,8 +5,11 @@ import "../styles/stockProducts.css";
 import LoadingElement from "../components/LoadingElement.jsx";
 import FormProduk from "../components/FormProduk.jsx";
 import AlertSuksesAddData from "../components/AlertSuksesAddData.jsx";
+import { useAuth } from "../context/AuthContext.jsx";
 
 function StockProducts() {
+    const { user } = useAuth();
+    const isAdmin = user?.role?.toLowerCase() === "admin";
     const itemsPerPage = 20;
     const [produks, setProduks] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
@@ -39,6 +42,7 @@ function StockProducts() {
     };
 
     const handleAdd = () => {
+        if (!isAdmin) return;
         setEditingProduk(null);
         setTimeout(() => {
             const el = document.getElementById("modalAdd");
@@ -47,6 +51,7 @@ function StockProducts() {
     };
 
     const handleEdit = (produk) => {
+        if (!isAdmin) return;
         setEditingProduk(produk);
         setTimeout(() => {
             const el = document.getElementById("modalAdd");
@@ -55,6 +60,7 @@ function StockProducts() {
     };
 
     const handleDelete = async (produk) => {
+        if (!isAdmin) return;
         if (!window.confirm(`Hapus produk "${produk.nama_produk}"?`)) return;
         try {
             const res = await deleteProdukApi(produk.id_produk);
@@ -91,10 +97,12 @@ function StockProducts() {
                         </input>
                     </div>
                     {/* TAMBAH PRODUK  */}
-                    <button type="button" id="tambah-produk" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"  style={{marginBottom: "7px"}} onClick={handleAdd}>
-                        <i class="bi bi-plus-lg me-1"></i>
-                        <span>Tambah</span>
-                    </button>
+                    {isAdmin && (
+                        <button type="button" id="tambah-produk" class="btn btn-outline-primary btn-sm d-flex align-items-center gap-1"  style={{marginBottom: "7px"}} onClick={handleAdd}>
+                            <i class="bi bi-plus-lg me-1"></i>
+                            <span>Tambah</span>
+                        </button>
+                    )}
                 </div>
                 {/* TABLE */}
                 <div class="table-wrapper">
@@ -123,16 +131,18 @@ function StockProducts() {
                                     <th>
                                         Status
                                     </th>
-                                    <th style={{ width: 70 + 'px' }}>
-                                        Aksi
-                                    </th>
+                                    {isAdmin && (
+                                        <th style={{ width: 70 + 'px' }}>
+                                            Aksi
+                                        </th>
+                                    )}
                                 </tr>
                             </thead>
                             <tbody>
-                                {loading && <tr><td colSpan="8" className="text-center py-3">
+                                {loading && <tr><td colSpan={isAdmin ? 8 : 7} className="text-center py-3">
                                     <LoadingElement/>
                                     </td></tr>}
-                                {!loading && produks.length === 0 && <tr><td colSpan="8" className="text-center py-3">Tidak ada produk</td></tr>}
+                                {!loading && produks.length === 0 && <tr><td colSpan={isAdmin ? 8 : 7} className="text-center py-3">Tidak ada produk</td></tr>}
                                 {!loading && produks.map((p, i) => {
                                     const s = p.stok === 0 ? ["habis","status-danger"] : p.stok <= 10 ? ["menipis","status-warning"] : ["Aman","status-safe"];
                                     return (
@@ -144,8 +154,10 @@ function StockProducts() {
                                     <td>Rp {Number(p.harga).toLocaleString("id-ID")}</td>
                                     <td>{p.stok}</td>
                                     <td className="text-center"><span className={`badge status-badge ${s[1]}`}>{s[0]}</span></td>
-                                    <td><div className="d-flex gap-1"><button id="update-produk" className="btn btn-outline-primary action-btn btn-edit"  onClick={() => handleEdit(p)}><i className="bi bi-pencil"></i></button>
-                                    <button id="delete-produk" className="btn btn-outline-danger action-btn" onClick={() => handleDelete(p)}><i className="bi bi-trash"></i></button></div></td>
+                                    {isAdmin && (
+                                        <td><div className="d-flex gap-1"><button id="update-produk" className="btn btn-outline-primary action-btn btn-edit"  onClick={() => handleEdit(p)}><i className="bi bi-pencil"></i></button>
+                                        <button id="delete-produk" className="btn btn-outline-danger action-btn" onClick={() => handleDelete(p)}><i className="bi bi-trash"></i></button></div></td>
+                                    )}
                                 </tr>
                                     )
                                 })}
@@ -229,7 +241,9 @@ function StockProducts() {
                     </div>
                 </div>
             </div>
-            <FormProduk key={editingProduk?.id_produk || "new"} initialData={editingProduk} onSaved={(msg) => { setEditingProduk(null); handleSaved(msg); }} onFailed={(msg) => { setEditingProduk(null); handleFailed(msg); }} />
+            {isAdmin && (
+                <FormProduk key={editingProduk?.id_produk || "new"} initialData={editingProduk} onSaved={(msg) => { setEditingProduk(null); handleSaved(msg); }} onFailed={(msg) => { setEditingProduk(null); handleFailed(msg); }} />
+            )}
         </main>
     )
 }
