@@ -8,6 +8,7 @@ import AlertAuthentication from "../components/AlertAuthentication.jsx";
 function LoginPage() {
     const [ email, setEmail ] = useState('');
     const [ password, setPassword ] = useState('');
+    const [ showPassword, setShowPassword ] = useState(false);
     const [msg, setMsg] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
@@ -70,7 +71,7 @@ function LoginPage() {
                         <i className="bi bi-person"></i>
                     </span>
 
-                    <input type="text" className="form-control" placeholder="Email / Username" aria-label="Email atau Username" onChange={(event) => setEmail(event.target.value)} required></input>
+                    <input type="text" className="form-control" placeholder="Email" aria-label="Email atau Username" onChange={(event) => setEmail(event.target.value)} required></input>
                 </div>
 
                 {/* Password  */}
@@ -79,7 +80,15 @@ function LoginPage() {
                         <i className="bi bi-lock"></i>
                     </span>
 
-                    <input type="password" className="form-control" placeholder="Password" aria-label="Password" onChange={(event) => setPassword(event.target.value)} required></input>
+                    <input type={showPassword ? "text" : "password"} className="form-control" placeholder="Password" aria-label="Password" value={password} onChange={(event) => setPassword(event.target.value)} required></input>
+                    <button
+                        type="button"
+                        className="btn bg-white border border-start-0 text-muted"
+                        onClick={() => setShowPassword(!showPassword)}
+                        tabIndex="-1"
+                    >
+                        <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                    </button>
                 </div>
 
                 {/* Remember & Forgot Password  */}

@@ -13,12 +13,21 @@ export const userApi = async (payload) => {
     return user.data;
 };
 
+//REGISTER-USER 
+export const registerApi = async (payload) => {
+    const res = await axios.post(`${urlUser}/register`, payload, {
+        withCredentials: true
+    });
+    return res.data;
+};
+
 // API_PRODUK
 export const produkApi = async (params = {}) => {
     const produk = await axios.get(`${urlProduk}`, { params, withCredentials: true });
     return produk.data;
 };
 
+// TAMBAH-PRODUK
 export const tambahProdukApi = async (payload) => {
     const token = localStorage.getItem("authToken");
     const res = await axios.post(urlProduk, payload, {
@@ -28,6 +37,7 @@ export const tambahProdukApi = async (payload) => {
     return res.data;
 };
 
+// UPDATE-PRODUK
 export const updateProdukApi = async (id, payload) => {
     const token = localStorage.getItem("authToken");
     const res = await axios.put(`${urlProduk}/${id}`, payload, {
@@ -37,6 +47,7 @@ export const updateProdukApi = async (id, payload) => {
     return res.data;
 };
 
+// DELETE-PRODUK
 export const deleteProdukApi = async (id) => {
     const token = localStorage.getItem("authToken");
     const res = await axios.delete(`${urlProduk}/${id}`, {
@@ -46,6 +57,7 @@ export const deleteProdukApi = async (id) => {
     return res.data;
 };
 
+// TRANSASKI
 export const transaksiApi = async (items) => {
     const token = localStorage.getItem("authToken");
     const transaksi = await axios.post(urlTransaksi, { items }, {
@@ -55,6 +67,7 @@ export const transaksiApi = async (items) => {
     return transaksi.data;
 };
 
+// LAPORAN
 export const laporanApi = async (params = {}) => {
     const token = localStorage.getItem("authToken");
     const res = await axios.get(urlLaporan, {

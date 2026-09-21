@@ -9,7 +9,7 @@ const JENIS_MAP = {
     "Laporan Barang Masuk": "masuk",
     "Laporan Barang Keluar": "keluar",
 };
-const VALUE_TO_LABEL = Object.fromEntries(Object.entries(JENIS_MAP).map(([k, v]) => [v, k]));
+// const VALUE_TO_LABEL = Object.fromEntries(Object.entries(JENIS_MAP).map(([k, v]) => [v, k]));
 
 function Laporan() {
     const [jenis, setJenis] = useState("akhir");
@@ -135,13 +135,14 @@ function Laporan() {
                 {/* Sub Navigation Tabs */}
                 <div className="bg-light p-3 border-bottom">
                     <ul className="nav nav-pills gap-2" role="tablist">
-                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "user" ? "active bg-white text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("user")} type="button">Laporan User</button></li>
-                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "masuk" ? "active bg-white text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("masuk")} type="button">Laporan Barang Masuk</button></li>
-                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "keluar" ? "active bg-white text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("keluar")} type="button">Laporan Barang Keluar</button></li>
-                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "akhir" ? "active bg-white text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("akhir")} type="button">Laporan Hasil Akhir</button></li>
+                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "user" ? "active bg-white border-primary text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("user")} type="button">Laporan User</button></li>
+                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "masuk" ? "active bg-white border-primary text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("masuk")} type="button">Laporan Barang Masuk</button></li>
+                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "keluar" ? "active bg-white border-primary text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("keluar")} type="button">Laporan Barang Keluar</button></li>
+                        <li className="nav-item"><button className={`nav-link btn-sm rounded-3 px-3 py-2 border fw-medium ${activeTab === "akhir" ? "active bg-white border-primary text-dark shadow-sm" : "bg-white text-dark"}`} onClick={() => handleTabClick("akhir")} type="button">Laporan Hasil Akhir</button></li>
                     </ul>
                 </div>
                 {error && <div className="alert alert-danger py-2 small m-3 mb-0">{error}</div>}
+
                 {/* Tab Content Area */}
                 <div className="p-4 bg-white">
                     {loading && <div className="text-center py-4"><div className="spinner-border spinner-border-sm"></div> <span className="small text-muted ms-2">Memuat laporan...</span></div>}
@@ -160,7 +161,7 @@ function Laporan() {
                                             <th>Logout</th>
                                         </tr>
                                     </thead>
-                                    <tbody>
+                                    <tbody className="tabel-laporan" style={{overflowY: "auto" }}>
                                         {dataUser.length === 0 ? <tr><td colSpan={6} className="text-muted">Tidak ada data</td></tr> : dataUser.map((u, i) => (
                                             <tr key={u.id_user}><td>{i + 1}</td><td>{u.username}</td><td>{u.role}</td><td>{u.email}</td><td>{fmtDateTime(u.last_login)}</td><td>{fmtDateTime(u.last_logout)}</td></tr>
                                         ))}
@@ -211,7 +212,7 @@ function Laporan() {
                             <div className="table-responsive">
                                 <table className="table table-bordered align-middle text-center small">
                                     <thead className="table-light"><tr><th>No</th><th>Tanggal</th><th>Kasir</th><th>Total</th><th>Item</th></tr></thead>
-                                    <tbody>
+                                    <tbody style={{overflowY: "auto"}}>
                                         {!dataAkhir || dataAkhir.transaksiList.length === 0 ? <tr><td colSpan={5} className="text-muted">Tidak ada transaksi</td></tr> : dataAkhir.transaksiList.map((t, i) => (
                                             <tr key={t.id_transaksi}><td>{i + 1}</td><td>{fmtDate(t.tanggal_transaksi)}</td><td>{t.User?.username || t.id_user}</td><td>{fmtRp(t.total_bayar)}</td><td>{t.detail_transaksis?.map(d => `${d.Produk?.nama_produk} x${d.qty}`).join(", ") || "-"}</td></tr>
                                         ))}
