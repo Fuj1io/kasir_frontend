@@ -21,11 +21,15 @@ function Laporan() {
     const [error, setError] = useState("");
     const { barangMenipisCount, loading: produkLoading } = useProduk();
 
-    const fetchLaporan = async (targetJenis = jenis) => {
+    const fetchLaporan = async (targetJenis = jenis, customDari = dari, customSampai = sampai) => {
         setLoading(true);
         setError("");
         try {
-            const res = await laporanApi({ jenis: targetJenis, dari: dari || undefined, sampai: sampai || undefined });
+            const res = await laporanApi({
+                jenis: targetJenis,
+                dari: customDari || undefined,
+                sampai: customSampai || undefined
+            });
             setResult(res);
             setActiveTab(targetJenis);
         } catch (e) {
@@ -35,10 +39,15 @@ function Laporan() {
         }
     };
 
-    useEffect(() => { fetchLaporan("akhir"); }, []);
+    useEffect(() => { fetchLaporan("akhir", "", ""); }, []);
 
-    const handleTampilkan = () => fetchLaporan(jenis);
-    const handleTabClick = (v) => { setJenis(v); fetchLaporan(v); };
+    const handleTampilkan = () => fetchLaporan(jenis, dari, sampai);
+    const handleTabClick = (v) => { setJenis(v); fetchLaporan(v, dari, sampai); };
+    const handleResetTerbaru = () => {
+        setDari("");
+        setSampai("");
+        fetchLaporan(jenis, "", "");
+    };
 
     const fmtDate = (d) => d ? new Date(d).toLocaleDateString("id-ID") : "-";
     const fmtDateTime = (d) => d ? new Date(d).toLocaleString("id-ID", { day: "2-digit", month: "2-digit", year: "numeric", hour: "2-digit", minute: "2-digit" }) : "-";
@@ -80,9 +89,10 @@ function Laporan() {
                         </div>
                         <div className="col-md-3 d-flex gap-1 mb-3">
                             <button className="btn btn-dark btn-sm w-100 rounded-3" onClick={handleTampilkan} disabled={loading}>{loading ? "Memuat..." : "Tampilkan"}</button>
+                            <button className="btn btn-outline-primary btn-sm w-100 rounded-3" onClick={handleResetTerbaru} disabled={loading} title="Tampilkan tanggal terbaru">Terbaru</button>
                             <div className="dropdown w-100">
-                                <button className="btn btn-outline-secondary btn-sm dropdown-toggle w-100 rounded-3"
-                                    type="button" data-bs-toggle="dropdown">Export</button>
+                                <button className="btn btn-outline-secondary btn-sm dropdown-toggle w-100 rounded-3 "
+                                    type="button" data-bs-toggle="dropdown" disabled>Export</button>
                                 <ul className="dropdown-menu">
                                     <li><a className="dropdown-item" href="#">PDF</a></li>
                                     <li><a className="dropdown-item" href="#">Excel</a></li>
@@ -91,6 +101,36 @@ function Laporan() {
                         </div>
                     </div>
                 </div>
+
+                {/* Date Status Info Banner */}
+                {result && (
+                    <div className="bg-light px-3 py-2 border-bottom d-flex align-items-center justify-content-between flex-wrap gap-2 small">
+                        <div className="d-flex align-items-center gap-2">
+                            <span className="text-muted">Tanggal Laporan:</span>
+                            <span className="fw-semibold text-dark">
+                                {result.isLatest
+                                    ? fmtDate(result.tanggal)
+                                    : dari && sampai && dari !== sampai
+                                    ? `${fmtDate(dari)} - ${fmtDate(sampai)}`
+                                    : fmtDate(result.tanggal || dari || sampai)}
+                            </span>
+                            {result.isLatest ? (
+                                <span className="badge bg-success text-white">
+                                    <i className="bi bi-clock-history me-1"></i>Terbaru
+                                </span>
+                            ) : (
+                                <span className="badge bg-secondary text-white">
+                                    <i className="bi bi-archive me-1"></i>Arsip / Riwayat
+                                </span>
+                            )}
+                        </div>
+                        {!result.isLatest && (
+                            <button className="btn btn-link btn-sm text-decoration-none p-0 text-primary small" onClick={handleResetTerbaru}>
+                                <i className="bi bi-arrow-counterclockwise me-1"></i>Kembali ke Tanggal Terbaru
+                            </button>
+                        )}
+                    </div>
+                )}
 
                 {/* Sub Navigation Tabs */}
                 <div className="bg-light p-3 border-bottom">
